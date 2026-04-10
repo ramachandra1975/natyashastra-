@@ -61,33 +61,31 @@
         }
 
         /* Actual backdrop images loaded directly from GitHub raw */
-        /* Updated to match the requested sequence and filenames */
         .bg-slide:nth-child(1) {
             background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop.jpg');
         }
 
         .bg-slide:nth-child(2) {
-            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop1.png');
+            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/1.png');
         }
 
         .bg-slide:nth-child(3) {
-            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop2.png');
+            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/2.png');
         }
 
         .bg-slide:nth-child(4) {
-            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop3.png');
+            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/3.png');
         }
 
         .bg-slide:nth-child(5) {
-            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop4.png');
+            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/4.png');
         }
 
         .bg-slide:nth-child(6) {
-            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop5.png');
+            background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/5.png');
         }
 
         /* Fallback gradients (visible when image hasn't loaded) */
-        /* These are kept as they are, but the primary images are now correctly mapped */
         .bg-slide:nth-child(1) {
             background-color: #0f2240;
         }
@@ -329,7 +327,6 @@
             z-index: -1;
             background-size: cover;
             background-position: center;
-            /* Initial background image for hero */
             background-image: url('https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/backdrop.jpg');
             transition: opacity 2s;
         }
@@ -780,8 +777,7 @@
         }
 
         /* Photo fills the card */
-        /* Corrected selector: '.author-portrait img' or similar, not '.author.jpg' */
-        .author-portrait img.author-photo {
+        .author.jpg {
             width: 100%;
             aspect-ratio: 3 / 4;
             object-fit: cover;
@@ -1159,15 +1155,13 @@
     <div id="page-overlay"></div>
     <!-- WATERMARK LOGO -->
     <div id="watermark">
-        <!-- Using logo.png from the repository -->
-        <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/logo.png" alt="Aesthetics of Society Logo" onerror="this.parentElement.style.display='none'">
+        <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/logo.png" alt="" onerror="this.parentElement.style.display='none'">
     </div>
     <div id="watermark-text">OM</div>
     <!-- ===== NAV (Publications / Timeline / Guru's Clan removed) ===== -->
     <nav id="main-nav">
         <!-- LEFT: logo.png + brand text -->
         <a href="index.html" class="nav-brand">
-            <!-- Using logo.png from the repository -->
             <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/logo.png" alt="Aesthetics of Society" class="nav-logo" onerror="this.style.display='none'">
             <div class="nav-brand-text">
                 <span class="name">AESTHETICS OF SOCIETY</span>
@@ -1180,7 +1174,7 @@
             <li class="dropdown">
                 <a href="natya-shastra.html" class="active">Natya Shastra</a>
                 <div class="dropdown-menu">
-                    <a href="#ai-page1">AI &amp; Intelligence</a>
+                    <a href="#ai-page1">AI &amp; Ancient Intelligence</a>
                     <a href="#neuro-page1">Neuroscience</a>
                     <a href="#medical-page1">Medical Sciences</a>
                     <a href="#sound-page1">Science of Sound</a>
@@ -1221,7 +1215,6 @@
                 <!-- Portrait card -->
                 <div class="author-portrait">
                     <!-- Primary: actual NRC photo from the repository -->
-                    <!-- Replaced 'author.jpg' with the correct path and added class 'author-photo' -->
                     <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/author.jpg" alt="Naredla Rama Chandra" class="author-photo" id="author-photo-img" onerror="
               if(this.dataset.tried !== 'master') {
               this.dataset.tried = 'master';
@@ -1442,7 +1435,7 @@
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 4 &middot; Chapter XXIV, Verse 1</span>
-                        <div class="shloka-sanskrit">&#2344;&#2366;&#2349;&#2367;&#2350;&#2370;&#2354;&#2366;&#2342;&#2369;&#2342;&#2368;&#2352;&#2381;&#2339;&#2366;&#2358;&#2381;&#2330; &#2346;&#2381;&#2352;&#2366;&#2339;&#2366;&#2358;&#2381;&#2330; &#2361;&#2371;&#2342;&#2367; &#2360;&#2306;&#2360;&#2381;&#2341;&#2367;&#2340;&#2366;&#2307;&#2404;<br>&#2340;&#2375; &#2349;&#2366;&#2357;&#2351;&#2344;&#2381;&#2340;&#2367; &#2327;&#2366;&#2340;&#2381;&#2352;&#2366;&#2339;&#2367; &#2344;&#2366;&#2335;&#2381;&#2351;&#2346;&#2381;&#2352;&#2351;&#2379;&#2327;&#2342;&#2352;&#2381;&#2358;&#2367;&#2344;&#2366;&#2350;&#2381;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2344;&#2366;&#2344;&#2366;&#2349;&#2366;&#2357;&#2360;&#2350;&#2366;&#2351;&#2369;&#2325;&#2381;&#2340;&#2306; &#2344;&#2366;&#2344;&#2366;&#2357;&#2381;&#2351;&#2334;&#2381;&#2332;&#2344;&#2360;&#2306;&#2351;&#2369;&#2340;&#2350;&#2381;&#2404;<br>&#2354;&#2379;&#2325;&#2357;&#2375;&#2342;&#2360;&#2350;&#2369;&#2342;&#2381;&#2349;&#2370;&#2340;&#2306; &#2344;&#2366;&#2335;&#2381;&#2351;&#2350;&#2375;&#2340;&#2344;&#2381;&#2350;&#2351;&#2366; &#2325;&#2371;&#2340;&#2350;&#2381;&#2405;</div>
                         <div class="shloka-translation">"Filled with various emotions, combined with various expressive modes, born of the world and of the Veda &mdash; such is this Natya that I have created."</div>
                         <span class="shloka-source">Natya Shastra, Chapter XXIV &middot; Bharata Muni</span>
                     </div>
@@ -1595,7 +1588,7 @@
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 2 &middot; Chapter VII, Verse 2</span>
-                        <div class="shloka-sanskrit">&#2357;&#2367;&#2349;&#2366;&#2357;&#2366;&#2344;&#2369;&#2349;&#2366;&#2357;&#2357;&#2381;&#2351;&#2349;&#2367;&#2330;&#2366;&#2352;&#2367;&#2360;&#2306;&#2351;&#2379;&#2327;&#2366;&#2342;&#2381;&#2352;&#2360;&#2344;&#2367;&#2359;&#2381;&#2346;&#2340;&#2381;&#2340;&#2367;&#2307;&#2404;<br>&#2340;&#2340;&#2381;&#2352; &#2357;&#2367;&#2349;&#2366;&#2357;&#2366;&#2307; &#2358;&#2381;&#2352;&#2325;&#2371;&#2359;&#2381;&#2339;&#2357;&#2367;&#2359;&#2351;&#2366;&#2307; &#2346;&#2381;&#2352;&#2349;&#2371;&#2340;&#2351;&#2307;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2357;&#2367;&#2349;&#2366;&#2357;&#2366;&#2344;&#2369;&#2349;&#2366;&#2357;&#2357;&#2381;&#2351;&#2349;&#2367;&#2330;&#2366;&#2352;&#2367;&#2360;&#2306;&#2351;&#2379;&#2327;&#2366;&#2342;&#2381;&#2352;&#2360;&#2344;&#2367;&#2359;&#2381;&#2346;&#2340;&#2381;&#2340;&#2367;&#2307;&#2404;<br>&#2340;&#2340;&#2381;&#2352; &#2357;&#2367;&#2349;&#2366;&#2357;&#2366;&#2307; &#2358;&#2381;&#2352;&#2368;&#2325;&#2371;&#2359;&#2381;&#2339;&#2357;&#2367;&#2359;&#2351;&#2366;&#2307; &#2346;&#2381;&#2352;&#2349;&#2371;&#2340;&#2351;&#2307;&#2405;</div>
                         <div class="shloka-translation">"The manifestation of Rasa arises from the conjunction of Vibhava, Anubhava, and Vyabhichari."</div>
                         <span class="shloka-source">Natya Shastra, Chapter VII &middot; Bharata Muni</span>
                     </div>
@@ -1613,7 +1606,7 @@
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 5 &middot; Chapter I, Verse 107</span>
-                        <div class="shloka-sanskrit">&#2351;&#2340;&#2381;&#2325;&#2367;&#2334;&#2381;&#2330;&#2367;&#2354;&#2381;&#2354;&#2379;&#2325;&#2375; &#2358;&#2367;&#2354;&#2381;&#2346;&#2306; &#2357;&#2366; &#2325;&#2352;&#2381;&#2350; &#2357;&#2366; &#2357;&#2367;&#2342;&#2381;&#2351;&#2366; &#2357;&#2366;&#2404;<br>&#2340;&#2340;&#2381;&#2360;&#2352;&#2381;&#2357;&#2306; &#2344;&#2366;&#2335;&#2381;&#2351;&#2357;&#2375;&#2342;&#2366;&#2342;&#2381;&#2343;&#2367; &#2346;&#2381;&#2352;&#2366;&#2342;&#2369;&#2352;&#2381;&#2349;&#2370;&#2340;&#2350;&#2367;&#2361;&#2379;&#2330;&#2381;&#2351;&#2340;&#2375;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2360;&#2352;&#2381;&#2357;&#2375;&#2359;&#2366;&#2350;&#2375;&#2357; &#2358;&#2366;&#2360;&#2381;&#2340;&#2381;&#2352;&#2366;&#2339;&#2366;&#2306; &#2344;&#2366;&#2335;&#2381;&#2351;&#2358;&#2366;&#2360;&#2381;&#2340;&#2381;&#2352;&#2306; &#2346;&#2352;&#2366;&#2351;&#2339;&#2350;&#2381;&#2404;<br>&#2340;&#2360;&#2381;&#2350;&#2366;&#2342;&#2381;&#2357;&#2367;&#2332;&#2381;&#2334;&#2366;&#2340;&#2360;&#2352;&#2381;&#2357;&#2360;&#2381;&#2357;&#2379; &#2344;&#2366;&#2335;&#2381;&#2351;&#2332;&#2381;&#2334;&#2307; &#2346;&#2370;&#2332;&#2381;&#2351;&#2340;&#2375; &#2344;&#2352;&#2307;&#2405;</div>
                         <div class="shloka-translation">"The Natya Shastra is the supreme refuge of all Shastras. Therefore, the person who knows Natya in its entirety is worthy of honour."</div>
                         <span class="shloka-source">Natya Shastra, Chapter I &middot; Bharata Muni</span>
                     </div>
@@ -1685,19 +1678,19 @@
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 3 &middot; Chapter X, Verse 34</span>
-                        <div class="shloka-sanskrit">&#2357;&#2381;&#2351;&#2366;&#2351;&#2366;&#2350;&#2366;&#2340;&#2381;&#2360;&#2352;&#2381;&#2357;&#2352;&#2379;&#2327;&#2366;&#2339;&#2366;&#2306; &#2344;&#2366;&#2358;&#2379;&#2365;&#2351;&#2306; &#2346;&#2381;&#2352;&#2340;&#2367;&#2346;&#2366;&#2342;&#2381;&#2351;&#2340;&#2375;&#2404;<br>&#2344;&#2366;&#2335;&#2381;&#2351;&#2375;&#2344; &#2342;&#2375;&#2361;&#2375; &#2360;&#2381;&#2357;&#2366;&#2360;&#2381;&#2341;&#2381;&#2351;&#2306; &#2360;&#2350;&#2381;&#2349;&#2357;&#2340;&#2367; &#2343;&#2381;&#2352;&#2369;&#2357;&#2350;&#2381;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2357;&#2381;&#2351;&#2366;&#2351;&#2366;&#2350;&#2366;&#2340;&#2381;&#2360;&#2352;&#2381;&#2357;&#2352;&#2379;&#2327;&#2366;&#2339;&#2366;&#2306; &#2344;&#2366;&#2358;&#2379;&#2365;&#2351;&#2306; &#2346;&#2381;&#2352;&#2340;&#2367;&#2346;&#2366;&#2342;&#2381;&#2351;&#2340;&#2375;&#2404;<br>&#2344;&#2366;&#2335;&#2381;&#2351;&#2357;&#2381;&#2351;&#2366;&#2351;&#2366;&#2350;&#2340;&#2379; &#2342;&#2375;&#2361;&#2375; &#2360;&#2381;&#2357;&#2366;&#2360;&#2381;&#2341;&#2381;&#2351;&#2306; &#2360;&#2350;&#2381;&#2349;&#2357;&#2340;&#2367; &#2343;&#2381;&#2352;&#2369;&#2357;&#2350;&#2381;&#2405;</div>
                         <div class="shloka-translation">"Through this exercise, the destruction of all diseases is established. Through the physical discipline of Natya, health in the body certainly arises."</div>
                         <span class="shloka-source">Natya Shastra, Chapter X &middot; Bharata Muni</span>
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 4 &middot; Chapter XXVIII, Verse 9</span>
-                        <div class="shloka-sanskrit">&#2360;&#2352;&#2375; &#2327;&#2368;&#2340;&#2375; &#2330; &#2357;&#2366;&#2342;&#2381;&#2351;&#2375; &#2330; &#2340;&#2366;&#2354;&#2375; &#2330; &#2344;&#2371;&#2340;&#2381;&#2351;&#2325;&#2352;&#2381;&#2350;&#2339;&#2367;&#2404;<br>&#2360;&#2352;&#2381;&#2357;&#2366;&#2339;&#2381;&#2351;&#2346;&#2367; &#2346;&#2381;&#2352;&#2351;&#2379;&#2327;&#2375;&#2359;&#2369; &#2360;&#2381;&#2357;&#2360;&#2381;&#2341;&#2330;&#2367;&#2340;&#2381;&#2340;&#2360;&#2381;&#2351; &#2357;&#2352;&#2381;&#2340;&#2344;&#2350;&#2381;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2360;&#2381;&#2357;&#2352;&#2375; &#2327;&#2368;&#2340;&#2375; &#2330; &#2357;&#2366;&#2342;&#2381;&#2351;&#2375; &#2330; &#2340;&#2366;&#2354;&#2375; &#2330; &#2344;&#2371;&#2340;&#2381;&#2351;&#2325;&#2352;&#2381;&#2350;&#2339;&#2367;&#2404;<br>&#2360;&#2352;&#2381;&#2357;&#2366;&#2339;&#2381;&#2351;&#2346;&#2367; &#2346;&#2381;&#2352;&#2351;&#2379;&#2327;&#2375;&#2359;&#2369; &#2360;&#2381;&#2357;&#2360;&#2381;&#2341;&#2330;&#2367;&#2340;&#2381;&#2340;&#2360;&#2381;&#2351; &#2357;&#2352;&#2381;&#2340;&#2344;&#2350;&#2381;&#2405;</div>
                         <div class="shloka-translation">"In voice, in song, in instrumental music, in rhythm, and in dance &mdash; in all these performances, the conduct is of one with a healthy mind."</div>
                         <span class="shloka-source">Natya Shastra, Chapter XXVIII &middot; Bharata Muni</span>
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 5 &middot; Chapter II, Verse 18</span>
-                        <div class="shloka-sanskrit">&#2342;&#2369;&#2307;&#2326;&#2366;&#2352;&#2381;&#2340;&#2366;&#2344;&#2366;&#2306; &#2358;&#2381;&#2352;&#2350;&#2366;&#2352;&#2381;&#2340;&#2366;&#2344;&#2366;&#2306; &#2358;&#2379;&#2325;&#2366;&#2352;&#2381;&#2340;&#2366;&#2344;&#2366;&#2306; &#2340;&#2346;&#2360;&#2381;&#2357;&#2367;&#2344;&#2366;&#2350;&#2381;&#2404;<br>&#2357;&#2367;&#2358;&#2381;&#2352;&#2366;&#2344;&#2381;&#2340;&#2367;&#2332;&#2344;&#2344;&#2306; &#2325;&#2366;&#2354;&#2375; &#2344;&#2366;&#2335;&#2381;&#2351;&#2350;&#2375;&#2340;&#2342;&#2381;&#2349;&#2357;&#2367;&#2359;&#2381;&#2351;&#2340;&#2375;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2342;&#2369;&#2307;&#2326;&#2366;&#2352;&#2381;&#2340;&#2366;&#2344;&#2366;&#2306; &#2358;&#2381;&#2352;&#2350;&#2366;&#2352;&#2381;&#2340;&#2366;&#2344;&#2366;&#2306; &#2358;&#2379;&#2325;&#2366;&#2352;&#2381;&#2340;&#2366;&#2344;&#2366;&#2306; &#2340;&#2346;&#2360;&#2381;&#2357;&#2367;&#2344;&#2366;&#2350;&#2381;&#2404;<br>&#2357;&#2367;&#2358;&#2381;&#2352;&#2366;&#2344;&#2381;&#2340;&#2367;&#2332;&#2344;&#2344;&#2306; &#2325;&#2366;&#2354;&#2375; &#2344;&#2366;&#2335;&#2381;&#2351;&#2350;&#2375;&#2340;&#2342;&#2381;&#2349;&#2357;&#2367;&#2359;&#2381;&#2351;&#2340;&#2367;&#2405;</div>
                         <div class="shloka-translation">"For those suffering from sorrow, fatigue, grief, and the pains of austerity &mdash; this Natya shall, in time, become the generator of rest and restoration."</div>
                         <span class="shloka-source">Natya Shastra, Chapter II &middot; Bharata Muni</span>
                     </div>
@@ -1760,7 +1753,7 @@
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 2 &middot; Chapter XI, Verse 3</span>
-                        <div class="shloka-sanskrit">&#2350;&#2352;&#2381;&#2350;&#2360;&#2306;&#2360;&#2381;&#2346;&#2352;&#2381;&#2358;&#2344;&#2375;&#2344;&#2376;&#2357; &#2342;&#2375;&#2361;&#2375; &#2340;&#2375;&#2332;&#2307; &#2346;&#2381;&#2352;&#2357;&#2352;&#2381;&#2340;&#2340;&#2375;&#2404;<br>&#2327;&#2379;&#2327;&#2366;&#2307; &#2360;&#2352;&#2381;&#2357; &#2346;&#2381;&#2352;&#2358;&#2366;&#2350;&#2381;&#2351;&#2344;&#2381;&#2340;&#2367; &#2357;&#2366;&#2340;&#2346;&#2367;&#2340;&#2381;&#2340;&#2325;&#2347;&#2366;&#2307; &#2325;&#2381;&#2352;&#2350;&#2366;&#2340;&#2381;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2350;&#2352;&#2381;&#2350;&#2360;&#2306;&#2360;&#2381;&#2346;&#2352;&#2381;&#2358;&#2344;&#2375;&#2344;&#2376;&#2357; &#2342;&#2375;&#2361;&#2375; &#2340;&#2375;&#2332;&#2307; &#2346;&#2381;&#2352;&#2357;&#2352;&#2381;&#2340;&#2340;&#2375;&#2404;<br>&#2352;&#2379;&#2327;&#2366;&#2307; &#2360;&#2352;&#2381;&#2357;&#2375; &#2346;&#2381;&#2352;&#2358;&#2366;&#2350;&#2381;&#2351;&#2344;&#2381;&#2340;&#2367; &#2357;&#2366;&#2340;&#2346;&#2367;&#2340;&#2381;&#2340;&#2325;&#2347;&#2366;&#2307; &#2325;&#2381;&#2352;&#2350;&#2366;&#2340;&#2381;&#2405;</div>
                         <div class="shloka-translation">"By the very touching of the Marma points, radiance is activated in the body. All diseases &mdash; of Vata, Pitta, and Kapha &mdash; are gradually pacified."</div>
                         <span class="shloka-source">Natya Shastra, Chapter XI &middot; Bharata Muni</span>
                     </div>
@@ -1938,7 +1931,7 @@
                     </div>
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 4 &middot; Chapter XXIX, Verse 1</span>
-                        <div class="shloka-sanskrit">&#2360;&#2366;&#2350;&#2327;&#2366;&#2351;&#2344;&#2381; &#2360;&#2342;&#2366; &#2342;&#2375;&#2357;&#2366;&#2307; &#2360;&#2381;&#2357;&#2352;&#2327;&#2375; &#2357;&#2360;&#2344;&#2381;&#2340;&#2367; &#2360;&#2344;&#2381;&#2340;&#2340;&#2350;&#2381;&#2404;<br>&#2344;&#2366;&#2349;&#2381;&#2351;&#2366;&#2342;&#2369;&#2342;&#2368;&#2352;&#2381;&#2351; &#2361;&#2371;&#2342;&#2381;&#2351;&#2375;&#2340;&#2367; &#2350;&#2369;&#2326;&#2306; &#2330; &#2325;&#2381;&#2352;&#2350;&#2358;&#2307; &#2360;&#2381;&#2357;&#2352;&#2307;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2360;&#2366;&#2350;&#2327;&#2366;&#2351;&#2344;&#2381; &#2360;&#2342;&#2366; &#2342;&#2375;&#2357;&#2366;&#2307; &#2360;&#2381;&#2357;&#2352;&#2381;&#2327;&#2375; &#2357;&#2360;&#2344;&#2381;&#2340;&#2367; &#2360;&#2344;&#2381;&#2340;&#2340;&#2350;&#2381;&#2404;<br>&#2344;&#2366;&#2349;&#2381;&#2351;&#2366;&#2342;&#2369;&#2342;&#2368;&#2352;&#2381;&#2351; &#2361;&#2371;&#2342;&#2381;&#2351;&#2375;&#2340;&#2367; &#2350;&#2369;&#2326;&#2306; &#2330; &#2325;&#2381;&#2352;&#2350;&#2358;&#2307; &#2360;&#2381;&#2357;&#2352;&#2307;&#2405;</div>
                         <div class="shloka-translation">"By singing the Sama, the gods ever dwell in heaven. The Swara rises from the navel, proceeds to the heart, and thence to the throat and mouth."</div>
                         <span class="shloka-source">Natya Shastra, Chapter XXIX &middot; Bharata Muni</span>
                     </div>
@@ -2004,7 +1997,7 @@
                 <div class="shlokas-column">
                     <div class="shloka-card">
                         <span class="shloka-num">Shloka 1 &middot; Chapter XXVIII, Verse 21</span>
-                        <div class="shloka-sanskrit">&#2359;&#2337;&#2332;&#2306; &#2357;&#2342;&#2340;&#2367; &#2350;&#2351;&#2370;&#2352;&#2379; &#2361;&#2367; &#2327;&#2366;&#2357;&#2379; &#2352;&#2350;&#2381;&#2349;&#2344;&#2381;&#2340;&#2367; &#2330;&#2352;&#2381;&#2359;&#2349;&#2350;&#2381;&#2404;<br>&#2309;&#2332;&#2366; &#2357;&#2342;&#2340;&#2367; &#2327;&#2366;&#2344;&#2381;&#2343;&#2366;&#2352;&#2306; &#2325;&#2381;&#2352;&#2380;&#2334;&#2381;&#2330;&#2379; &#2357;&#2342;&#2340;&#2367; &#2350;&#2343;&#2381;&#2351;&#2350;&#2350;&#2381;&#2405;</div>
+                        <div class="shloka-sanskrit">&#2359;&#2337;&#2381;&#2332;&#2306; &#2357;&#2342;&#2340;&#2367; &#2350;&#2351;&#2370;&#2352;&#2379; &#2361;&#2367; &#2327;&#2366;&#2357;&#2379; &#2352;&#2350;&#2381;&#2349;&#2344;&#2381;&#2340;&#2367; &#2330;&#2352;&#2381;&#2359;&#2349;&#2350;&#2381;&#2404;<br>&#2309;&#2332;&#2366; &#2357;&#2342;&#2340;&#2367; &#2327;&#2366;&#2344;&#2381;&#2343;&#2366;&#2352;&#2306; &#2325;&#2381;&#2352;&#2380;&#2334;&#2381;&#2330;&#2379; &#2357;&#2342;&#2340;&#2367; &#2350;&#2343;&#2381;&#2351;&#2350;&#2350;&#2381;&#2405;</div>
                         <div class="shloka-translation">"The peacock cries Shadja; the cattle low Rishabha; the goat speaks Gandhara; the Krauncha bird cries Madhyama."</div>
                         <span class="shloka-source">Natya Shastra, Chapter XXVIII &middot; Bharata Muni</span>
                     </div>
@@ -2199,7 +2192,6 @@
         const REPO_BASE = 'https://raw.githubusercontent.com/ramachandra1975/natyashastra/main/';
         const REPO_BASE_MASTER = 'https://raw.githubusercontent.com/ramachandra1975/natyashastra/master/';
 
-        // Updated list of background images as per requirements
         const bgImages = [
             'backdrop.jpg',
             'backdrop1.png',
@@ -2209,17 +2201,14 @@
             'backdrop5.png'
         ];
 
-        // Try loading images from the 'main' branch first, then fall back to 'master'
+        // Try main branch first, fall back to master
         function tryLoadImage(filename, onSuccess) {
             const img = new Image();
             img.onload = () => onSuccess(REPO_BASE + filename);
             img.onerror = () => {
-                // If 'main' fails, try 'master'
                 const img2 = new Image();
                 img2.onload = () => onSuccess(REPO_BASE_MASTER + filename);
-                img2.onerror = () => {
-                    // If both fail, do nothing, CSS fallback will be used
-                };
+                img2.onerror = () => {}; // keep CSS fallback
                 img2.src = REPO_BASE_MASTER + filename;
             };
             img.src = REPO_BASE + filename;
@@ -2229,21 +2218,19 @@
         let current = 0;
         const INTERVAL = 8000; // 8 seconds per slide
 
-        // Pre-load each image and apply it to the corresponding slide element
+        // Pre-load each image; if it loads, apply it to the slide
         bgImages.forEach((src, i) => {
-            if (!slides[i]) return; // Ensure there's a slide element for this image
+            if (!slides[i]) return;
             tryLoadImage(src, (url) => {
                 slides[i].style.backgroundImage = `url('${url}')`;
             });
         });
 
-        // Function to rotate background slides
         function rotateBg() {
             slides[current].classList.remove('active');
             current = (current + 1) % slides.length;
             slides[current].classList.add('active');
         }
-        // Set interval for background rotation
         setInterval(rotateBg, INTERVAL);
 
         /* Hero background also cycles */
@@ -2256,61 +2243,48 @@
             });
         }, INTERVAL);
 
-        /* Watermark &mdash; hide text watermark if logo.png loads successfully */
+        /* Watermark &mdash; hide text watermark if logo.png loads */
         const wmImg = document.querySelector('#watermark img');
         if (wmImg) {
             wmImg.onload = () => {
-                // If the image loads, hide the text watermark
                 document.getElementById('watermark-text').style.display = 'none';
             };
-            // Trigger onerror manually if the image is already cached and loaded
-            if (wmImg.complete) {
-                wmImg.onload();
-            }
         }
 
-        /* FORM SUBMIT handler */
+        /* FORM SUBMIT */
         function handleSubmit() {
             const name = document.getElementById('f-name').value.trim();
             const email = document.getElementById('f-email').value.trim();
             const inquiry = document.getElementById('f-inquiry').value.trim();
-
-            // Basic validation
             if (!name || !email || !inquiry) {
                 alert('Please complete at least Name, Email, and Inquiry fields before submitting.');
                 return;
             }
-
-            // Simulate successful submission
             const btn = document.querySelector('.btn-submit');
-            btn.textContent = 'Inquiry Submitted &#10003;'; // Checkmark symbol
-            btn.style.background = '#2a5a2a'; // Dark green background
+            btn.textContent = 'Inquiry Submitted &#10003;';
+            btn.style.background = '#2a5a2a';
             btn.style.cursor = 'default';
-            btn.disabled = true; // Disable button after submission
-
+            btn.disabled = true;
             const note = document.querySelector('.form-note');
-            note.textContent = `Thank you, ${name}. Your inquiry has been received. You will hear from us within 7–14 days.`;
-            note.style.color = 'rgba(197,208,197,0.8)'; // Lighter text color for confirmation
+            note.textContent = 'Thank you, ' + name + '. Your inquiry has been received. You will hear from us within 7&ndash;14 days.';
+            note.style.color = 'rgba(197,208,197,0.8)';
         }
 
         /* Smooth scroll for anchor links */
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
-                const targetId = a.getAttribute('href');
-                const target = document.querySelector(targetId);
+                const target = document.querySelector(a.getAttribute('href'));
                 if (target) {
-                    e.preventDefault(); // Prevent default anchor jump
-                    // Calculate scroll position, accounting for fixed header
-                    const headerOffset = 80; // Adjust this value based on your header height
-                    const elementPosition = target.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
+                    e.preventDefault();
+                    const top = target.getBoundingClientRect().top + window.scrollY - 80;
                     window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth' // Smooth scrolling animation
+                        top,
+                        behavior: 'smooth'
                     });
                 }
             });
         });
     </script>
 </body>
+
+</html>
