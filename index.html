@@ -10,17 +10,20 @@
   --gold:#c5a059;--gold-light:#e2c98a;
   --navy:#0f2240;--blue:#1a365d;
   --cream:#fdfaf5;--cream2:#f5efe3;
-  --muted:#666;--border:#e8e2d8;
+  --muted:#555;--border:rgba(197,160,89,0.35);
+  /* Glass surfaces */
+  --glass-light: rgba(255,252,245, 0.62);
+  --glass-dark:  rgba(10, 20, 45,  0.70);
+  --blur: blur(14px);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overflow-x:hidden}
+body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;overflow-x:hidden}
 
 /* ══════════════════════════════════════════
    GLOBAL ROTATING BACKGROUND SYSTEM
-   6 images cycle every 40 seconds
-   Sits behind EVERYTHING via fixed positioning
-   z-index: -3 (behind all content)
+   Fixed behind everything — NOW VISIBLE
+   Veil is very light so images show clearly
 ══════════════════════════════════════════ */
 #bg-engine{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
@@ -28,315 +31,327 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 .bg-layer{
   position:absolute;inset:0;
   background-size:cover;background-position:center center;background-repeat:no-repeat;
-  opacity:0;transition:opacity 2.5s ease-in-out;
+  opacity:0;transition:opacity 3s ease-in-out;
 }
 .bg-layer.active{opacity:1}
 
-/* Semi-transparent white overlay so page content is readable
-   This sits at z-index:-2 so it's above backgrounds but behind everything else */
+/* Very light veil — just takes the raw edge off, images still vivid */
 #bg-veil{
   position:fixed;inset:0;z-index:-2;pointer-events:none;
-  background:rgba(255,255,255,0.84);
+  background: rgba(245,235,215, 0.18);   /* near-transparent warm tint */
 }
 
 /* ══════════════════════════════════════════
-   PERMANENT CENTRE WATERMARK LOGO
-   Always visible, never moves, sits at z-index:-1
-   so it's above the backgrounds/veil but behind all page content
+   WATERMARK LOGO — now clearly visible
+   opacity raised from 0.08 → 0.22
+   Soft gold glow added
 ══════════════════════════════════════════ */
 #wm-logo{
   position:fixed;top:50%;left:50%;
   transform:translate(-50%,-50%);
   z-index:-1;pointer-events:none;
-  width:460px;height:460px;opacity:0.08;
+  width:480px;height:480px;
+  opacity:0.22;                    /* was 0.08 — now clearly seen */
+  filter: drop-shadow(0 0 32px rgba(197,160,89,0.5));
 }
 #wm-logo img{width:100%;height:100%;object-fit:contain;display:block}
-/* Fallback Sanskrit OM symbol if logo.png fails to load */
 #wm-om{
   position:fixed;top:50%;left:50%;
   transform:translate(-50%,-50%);
   z-index:-1;pointer-events:none;
   font-family:'Playfair Display',serif;
   font-size:22rem;font-weight:700;
-  color:var(--gold);opacity:0.04;
+  color:var(--gold);
+  opacity:0.18;                    /* was 0.04 — now visible */
+  filter: drop-shadow(0 0 24px rgba(197,160,89,0.4));
   white-space:nowrap;user-select:none;letter-spacing:-8px;
   display:none;
 }
 
 /* ══════════════════════════════════════════
-   NAV — Top left logo, right side links
+   NAV — Frosted gold-border strip
 ══════════════════════════════════════════ */
 #nav{
   position:fixed;top:0;left:0;right:0;z-index:9000;
   display:flex;justify-content:space-between;align-items:center;
   padding:0 4%;height:66px;
-  background:rgba(255,255,255,0.97);
-  border-bottom:1px solid rgba(197,160,89,.22);
-  backdrop-filter:blur(14px);
+  background:rgba(240,228,200, 0.28);
+  border-bottom:1px solid rgba(197,160,89,.45);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
   transition:box-shadow .3s;
 }
-#nav.sc{box-shadow:0 4px 40px rgba(0,0,0,.09)}
+#nav.sc{box-shadow:0 4px 40px rgba(197,160,89,.18)}
 
-/* Brand — logo top left */
 .nb{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
 .nb-img{width:46px;height:46px;object-fit:contain;flex-shrink:0;border-radius:3px}
-.nb-fb{
-  width:46px;height:46px;background:var(--navy);border-radius:3px;
-  display:none;align-items:center;justify-content:center;flex-shrink:0;
-}
+.nb-fb{width:46px;height:46px;background:var(--navy);border-radius:3px;display:none;align-items:center;justify-content:center;flex-shrink:0}
 .nb-fb span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;font-weight:700}
 .nb-txt .n1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.71rem;letter-spacing:2.5px;color:var(--blue);text-transform:uppercase}
 .nb-txt .n2{display:block;font-family:'Montserrat',sans-serif;font-size:.6rem;color:var(--gold);letter-spacing:1px}
 
-/* Nav links */
 .nl{display:flex;gap:0;align-items:center;list-style:none;height:66px}
 .nl>li{height:100%;display:flex;align-items:center;position:relative}
 .nl>li>a{
   display:flex;align-items:center;height:100%;padding:0 14px;
   font-family:'Montserrat',sans-serif;font-size:.61rem;font-weight:700;
   letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--blue);text-decoration:none;
+  color:#1a2e50;text-decoration:none;
+  text-shadow:0 1px 3px rgba(255,248,235,0.7);
   transition:color .2s;white-space:nowrap;
   border-bottom:2px solid transparent;
 }
 .nl>li>a:hover,.nl>li>a.act{color:var(--gold)}
 .nl>li>a.act{border-bottom-color:var(--gold)}
 
-/* Dropdown */
 .hd>a::after{content:' ▾';font-size:.52rem;opacity:.7}
 .dm{
   position:absolute;top:100%;left:50%;
   transform:translateX(-50%) translateY(-8px);
-  background:#fff;min-width:250px;
-  border:1px solid var(--border);
+  background:rgba(240,228,200,0.82);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  min-width:260px;
+  border:1px solid rgba(197,160,89,.45);
   border-top:2px solid var(--gold);
   padding:6px 0;
   opacity:0;pointer-events:none;
   transition:opacity .22s,transform .22s;
-  box-shadow:0 16px 48px rgba(0,0,0,.1);z-index:200;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);z-index:200;
 }
 .hd:hover .dm{opacity:1;pointer-events:all;transform:translateX(-50%) translateY(0)}
 .dm a{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 22px;
+  display:flex;align-items:center;gap:10px;padding:10px 22px;
   font-family:'Montserrat',sans-serif;font-size:.57rem;
   font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
   color:var(--blue);text-decoration:none;
-  transition:background .18s,color .18s;
-  border-left:2px solid transparent;
+  transition:background .18s,color .18s;border-left:2px solid transparent;
 }
-.dm a:hover{background:var(--cream);color:var(--gold);border-left-color:var(--gold)}
+.dm a:hover{background:rgba(197,160,89,.12);color:var(--gold);border-left-color:var(--gold)}
 .dm a .di{font-size:12px;opacity:.65;flex-shrink:0}
-.dmdiv{height:1px;background:var(--border);margin:4px 0}
+.dmdiv{height:1px;background:rgba(197,160,89,.22);margin:4px 0}
 
-/* CTA button */
-.ncta{
-  border:1px solid var(--gold)!important;
-  padding:8px 18px!important;height:auto!important;
-  color:var(--gold)!important;margin-left:8px;
-  transition:all .25s!important;
-}
+.ncta{border:1px solid var(--gold)!important;padding:8px 18px!important;height:auto!important;color:var(--gold)!important;margin-left:8px;transition:all .25s!important;}
 .ncta:hover{background:var(--gold)!important;color:#fff!important}
 
 @media(max-width:860px){.nl{display:none}}
 
 /* ══════════════════════════════════════════
-   HERO SECTION
-   Has its own overlay so it stays dark/readable
-   even as backgrounds rotate beneath
+   HERO — Dark overlay, image visible beneath
 ══════════════════════════════════════════ */
 #hero{
-  min-height:100vh;
-  display:flex;flex-direction:column;
+  min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   text-align:center;padding:140px 40px 90px;
   position:relative;overflow:hidden;
 }
-/* Dark overlay specific to hero — keeps hero legible */
 .hero-dk{
   position:absolute;inset:0;z-index:1;
-  background:linear-gradient(160deg,rgba(10,20,45,.87),rgba(15,34,64,.80),rgba(5,15,35,.87));
+  background:linear-gradient(160deg,rgba(8,16,36,.78),rgba(12,28,56,.72),rgba(4,12,28,.80));
 }
 .hic{position:relative;z-index:2;max-width:950px;margin:0 auto}
 .hrul{width:48px;height:2px;background:var(--gold);margin:0 auto 24px;animation:fu .7s ease both}
-.htag{
-  font-family:'Montserrat',sans-serif;font-size:.64rem;font-weight:700;
-  letter-spacing:5px;color:var(--gold);text-transform:uppercase;
-  margin-bottom:22px;animation:fu .8s .06s ease both;
-}
-#hero h1{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(2.5rem,7vw,5.6rem);
-  color:#fff;font-weight:700;line-height:1.04;
-  margin-bottom:24px;animation:fu .9s .12s ease both;
-}
+.htag{font-family:'Montserrat',sans-serif;font-size:.64rem;font-weight:700;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:22px;animation:fu .8s .06s ease both;}
+#hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,7vw,5.6rem);color:#fff;font-weight:700;line-height:1.04;margin-bottom:24px;animation:fu .9s .12s ease both;}
 #hero h1 em{color:var(--gold);font-style:italic}
-.hsub{
-  font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:clamp(1.1rem,2.2vw,1.42rem);
-  color:rgba(255,255,255,.62);max-width:760px;
-  line-height:1.75;margin:0 auto 36px;
-  animation:fu 1s .18s ease both;
-}
-.hpills{
-  display:flex;flex-wrap:wrap;gap:10px;
-  justify-content:center;margin-top:34px;
-  animation:fu 1s .3s ease both;
-}
-.hp{
-  font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;
-  letter-spacing:1.8px;text-transform:uppercase;
-  padding:9px 20px;
-  border:1px solid rgba(197,160,89,.44);
-  color:var(--gold-light);text-decoration:none;
-  background:rgba(255,255,255,.04);transition:all .3s;
-}
+.hsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.42rem);color:rgba(255,255,255,.72);max-width:760px;line-height:1.75;margin:0 auto 36px;animation:fu 1s .18s ease both;}
+.hpills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:34px;animation:fu 1s .3s ease both;}
+.hp{font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;padding:9px 20px;border:1px solid rgba(197,160,89,.50);color:var(--gold-light);text-decoration:none;background:rgba(0,0,0,.22);transition:all .3s;backdrop-filter:blur(6px);}
 .hp:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
 @keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 
 /* ══════════════════════════════════════════
-   ALL CONTENT SECTIONS
-   Each section has a semi-transparent background
-   so the rotating global backgrounds show through subtly
+   SECTIONS — FROSTED GLASS PANELS
+   Background images shine through clearly
+   Light sections: warm frosted glass
+   Dark sections: deep navy frosted glass
 ══════════════════════════════════════════ */
 .sec{padding:96px 0;position:relative;z-index:1}
 
-/* Light sections — cream tinted so background shows faintly */
-.sec-lt{background:rgba(255,255,255,0.93)}
-.sec-cr{background:rgba(253,250,245,0.93)}
+/* LIGHT section — warm frosted glass, warm gold border top */
+.sec-lt{
+  background: rgba(240,225,195, 0.22);
+  backdrop-filter: blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-top:1px solid rgba(197,160,89,.30);
+  border-bottom:1px solid rgba(197,160,89,.18);
+}
+.sec-cr{
+  background: rgba(235,218,185, 0.20);
+  backdrop-filter: blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-top:1px solid rgba(197,160,89,.25);
+  border-bottom:1px solid rgba(197,160,89,.15);
+}
 
-/* Dark sections — navy tinted */
-.sec-dk{background:rgba(10,20,45,0.94)!important}
-.sec-dk .ttl{color:#fff}
+/* DARK section — deep navy with transparency so BG shows */
+.sec-dk{
+  background: rgba(6, 14, 38, 0.62)!important;
+  backdrop-filter: blur(22px);-webkit-backdrop-filter:blur(22px);
+  border-top:1px solid rgba(197,160,89,.22);
+  border-bottom:1px solid rgba(197,160,89,.12);
+}
+.sec-dk .ttl{color:#f5f0e8}
 .sec-dk .lbl{color:var(--gold-light)}
-.sec-dk .cp{color:rgba(255,255,255,.7)}
-.sec-dk .pq{background:rgba(255,255,255,.04);border-left-color:var(--gold)}
-.sec-dk .pq p{color:#fff}
-.sec-dk .ri{background:rgba(255,255,255,.05);border-color:rgba(197,160,89,.2)}
+.sec-dk .cp{color:rgba(255,248,235,.80)}
+.sec-dk .pq{background:rgba(197,160,89,.08);border-left-color:var(--gold)}
+.sec-dk .pq p{color:#f0e8d0}
+.sec-dk .ri{background:rgba(255,255,255,.06);border-color:rgba(197,160,89,.22)}
 .sec-dk .ri:hover{border-color:var(--gold)}
 .sec-dk .rt{color:var(--gold-light)}
-.sec-dk .rd{color:rgba(255,255,255,.5)}
-.sec-dk .sc{background:rgba(255,255,255,.06);border:1px solid rgba(197,160,89,.2);border-left:3px solid var(--gold)}
+.sec-dk .rd{color:rgba(255,248,235,.55)}
+.sec-dk .sc{background:rgba(255,255,255,.05);border:1px solid rgba(197,160,89,.25);border-left:3px solid var(--gold)}
 
-/* Topic strip headers — fully opaque coloured bands */
-.strip{padding:50px;position:relative;z-index:1}
+/* TOPIC STRIP HEADERS — solid gold-tinged band */
+.strip{
+  padding:46px 52px;position:relative;z-index:1;
+  backdrop-filter: blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:2px solid rgba(197,160,89,.40);
+  border-bottom:1px solid rgba(197,160,89,.20);
+}
+/* Each strip has its own overlay applied inline, but we add the blur here */
 .strip .si{max-width:1240px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
 .strip .sm{font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-light);margin-bottom:6px}
 .strip .st{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2.4rem);color:#fff;font-weight:700}
-.strip .pg{font-family:'Playfair Display',serif;font-size:3.8rem;color:rgba(255,255,255,.09);font-weight:700;line-height:1}
+.strip .pg{font-family:'Playfair Display',serif;font-size:3.8rem;color:rgba(255,255,255,.14);font-weight:700;line-height:1}
 
 /* ══════════════════════════════════════════
-   SHARED TYPOGRAPHY & LAYOUT
+   SHARED TYPOGRAPHY
 ══════════════════════════════════════════ */
 .w{max-width:1240px;margin:0 auto;padding:0 52px}
 .lbl{display:block;font-family:'Montserrat',sans-serif;font-size:.61rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
 .ttl{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,4vw,3.3rem);color:var(--blue);font-weight:700;line-height:1.06;margin-bottom:36px}
 .ttl em{color:var(--gold);font-style:italic}
-.orn{text-align:center;padding:28px 0;position:relative;z-index:1;background:transparent}
-.orn span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.3rem;letter-spacing:22px;opacity:.52}
+
+.orn{text-align:center;padding:28px 0;position:relative;z-index:1;
+  background:rgba(197,160,89,0.06);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
+.orn span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.3rem;letter-spacing:22px;opacity:.85}
 
 /* Two-column grid */
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
 .tg.rv{direction:rtl}.tg.rv>*{direction:ltr}
 
-/* Body copy */
-.cp{font-size:1.05rem;line-height:1.92;color:#444;margin-bottom:22px;text-align:justify}
+/* Body copy — stronger contrast with text-shadow lift on glass */
+.cp{font-size:1.05rem;line-height:1.92;color:#2a1e0a;margin-bottom:22px;text-align:justify}
+.sec-lt .cp, .sec-cr .cp{
+  color:#1e1508;
+  text-shadow: 0 1px 4px rgba(255,245,220,0.55), 0 0 12px rgba(255,245,220,0.30);
+  font-weight:400;
+}
 
 /* Pull quote */
-.pq{border-left:3px solid var(--gold);padding:20px 30px;background:rgba(197,160,89,.055);margin:28px 0}
-.pq p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.16rem;color:var(--blue);line-height:1.5;margin:0;text-align:left}
+.pq{border-left:3px solid var(--gold);padding:20px 30px;background:rgba(197,160,89,.07);margin:28px 0;backdrop-filter:blur(10px);}
+.pq p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.16rem;color:#1e1508;line-height:1.5;margin:0;text-align:left;text-shadow:0 1px 4px rgba(255,245,220,0.5);}
+.sec-dk .pq p{color:#f0e8d0;text-shadow:none;}
 
 /* Research links */
 .rl{margin-top:28px;display:flex;flex-direction:column;gap:10px}
-.ri{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--border);background:rgba(255,255,255,.85);transition:all .3s}
-.ri:hover{border-color:var(--gold);transform:translateX(5px)}
+.ri{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid rgba(197,160,89,.32);background:rgba(240,225,195,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all .3s}
+.ri:hover{border-color:var(--gold);transform:translateX(5px);background:rgba(240,225,195,.35);}
 .ric{font-size:1.1rem;flex-shrink:0}
-.rt{font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase}
-.rd{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--muted);line-height:1.4}
+.rt{font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;color:#1a2e50;letter-spacing:1px;text-transform:uppercase;text-shadow:0 1px 3px rgba(255,245,220,0.5);}
+.rd{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#3a2e1a;line-height:1.4;text-shadow:0 1px 2px rgba(255,245,220,0.4);}
 
 /* ══════════════════════════════════════════
    SHLOKA CARDS
 ══════════════════════════════════════════ */
-.scc{display:flex;flex-direction:column;gap:24px}
-.sc{background:var(--navy);padding:30px 34px;position:relative;overflow:hidden;border-left:3px solid var(--gold)}
-.sc::before{content:'"';position:absolute;top:2px;right:14px;font-size:6rem;color:rgba(197,160,89,.07);font-family:'Playfair Display',serif;line-height:1;pointer-events:none}
+.scc{display:flex;flex-direction:column;gap:20px}
+.sc{
+  background:rgba(8,18,48,0.72);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:28px 32px;position:relative;overflow:hidden;
+  border:1px solid rgba(197,160,89,.22);
+  border-left:3px solid var(--gold);
+}
+.sc::before{content:'"';position:absolute;top:2px;right:14px;font-size:6rem;color:rgba(197,160,89,.09);font-family:'Playfair Display',serif;line-height:1;pointer-events:none}
 .sn{display:block;font-family:'Montserrat',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
-.ss{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.06rem;color:#fff;line-height:1.68;margin-bottom:11px}
-.str{font-family:'Cormorant Garamond',serif;font-size:.88rem;color:rgba(255,255,255,.52);line-height:1.6;font-style:italic}
-.src{display:block;font-family:'Montserrat',sans-serif;font-size:.48rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-top:11px;padding-top:9px;border-top:1px solid rgba(197,160,89,.18)}
+.ss{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.06rem;color:#f0e8d0;line-height:1.68;margin-bottom:11px}
+.str{font-family:'Cormorant Garamond',serif;font-size:.88rem;color:rgba(230,215,185,.60);line-height:1.6;font-style:italic}
+.src{display:block;font-family:'Montserrat',sans-serif;font-size:.48rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-top:11px;padding-top:9px;border-top:1px solid rgba(197,160,89,.20)}
 
 /* ══════════════════════════════════════════
-   ABOUT AUTHOR SECTION
+   AUTHOR SECTION
 ══════════════════════════════════════════ */
-#author{background:rgba(253,250,245,0.95)!important;padding:100px 0;position:relative;z-index:1}
+#author{
+  background:rgba(235,218,185,0.20)!important;
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  padding:100px 0;position:relative;z-index:1;
+  border-top:2px solid rgba(197,160,89,.32);
+  border-bottom:1px solid rgba(197,160,89,.20);
+}
 .ag{display:grid;grid-template-columns:370px 1fr;gap:70px;align-items:start}
-.ap{background:var(--navy);border-top:3px solid var(--gold);position:relative;overflow:hidden}
+.ap{
+  background:rgba(8,18,48,0.78);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:3px solid var(--gold);
+  border:1px solid rgba(197,160,89,.28);
+  border-top:3px solid var(--gold);
+  position:relative;overflow:hidden;
+}
 .aph{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center;display:block}
 .apf{display:none;padding:46px 34px;text-align:center}
 .api{width:86px;height:86px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
 .api span{font-family:'Playfair Display',serif;font-size:1.9rem;color:#fff;font-weight:700}
 .apc{padding:22px 28px 28px;position:relative;z-index:1}
-.apc::after{content:'OM';position:absolute;bottom:-14px;right:-8px;font-family:'Playfair Display',serif;font-size:7rem;color:rgba(197,160,89,.07);pointer-events:none;line-height:1}
+.apc::after{content:'OM';position:absolute;bottom:-14px;right:-8px;font-family:'Playfair Display',serif;font-size:7rem;color:rgba(197,160,89,.08);pointer-events:none;line-height:1}
 .apn{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;margin-bottom:4px}
 .apr{font-family:'Montserrat',sans-serif;font-size:.57rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:13px}
-.apb{font-size:.87rem;color:rgba(255,255,255,.5);line-height:1.65;font-family:'Cormorant Garamond',serif;font-style:italic}
+.apb{font-size:.87rem;color:rgba(220,210,190,.65);line-height:1.65;font-family:'Cormorant Garamond',serif;font-style:italic}
 .apt{display:flex;flex-direction:column;gap:7px;margin-top:16px}
-.at{font-family:'Montserrat',sans-serif;font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);padding:6px 0;border-bottom:1px solid rgba(197,160,89,.14)}
-.ac p{font-size:1.05rem;line-height:1.9;color:#444;margin-bottom:20px;text-align:justify}
+.at{font-family:'Montserrat',sans-serif;font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(220,210,190,.55);padding:6px 0;border-bottom:1px solid rgba(197,160,89,.16)}
+.ac p{font-size:1.05rem;line-height:1.9;color:#1e1508;margin-bottom:20px;text-align:justify;text-shadow:0 1px 4px rgba(255,245,220,0.5);}
 .af{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:26px}
-.afi{padding:17px;border:1px solid var(--border);background:rgba(255,255,255,.9);transition:border-color .3s}
-.afi:hover{border-color:var(--gold)}
+.afi{padding:17px;border:1px solid rgba(197,160,89,.30);background:rgba(240,225,195,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:border-color .3s,background .3s}
+.afi:hover{border-color:var(--gold);background:rgba(240,225,195,.38);}
 .afi .ico{font-size:1.1rem;margin-bottom:7px;display:block}
-.afi h4{font-family:'Montserrat',sans-serif;font-size:.59rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:3px}
-.afi p{font-size:.83rem;color:var(--muted);margin:0;line-height:1.5}
+.afi h4{font-family:'Montserrat',sans-serif;font-size:.59rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a2e50;margin-bottom:3px;text-shadow:0 1px 3px rgba(255,245,220,0.5);}
+.afi p{font-size:.83rem;color:#3a2e1a;margin:0;line-height:1.5;text-shadow:0 1px 2px rgba(255,245,220,0.4);}
 
 /* ══════════════════════════════════════════
    INQUIRY FORM
 ══════════════════════════════════════════ */
-#inquiry{background:linear-gradient(150deg,rgba(26,54,93,.97),rgba(15,34,64,.97));padding:100px 0;position:relative;z-index:1}
+#inquiry{
+  background:rgba(6,14,36,0.82)!important;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  padding:100px 0;position:relative;z-index:1;
+  border-top:2px solid rgba(197,160,89,.28);
+}
 .iqi{max-width:820px;margin:0 auto;padding:0 40px}
 .iqh{text-align:center;margin-bottom:58px}
-.iqh h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.9rem);color:#fff;font-style:italic;margin-top:12px}
-.iqh p{font-size:1.04rem;color:rgba(255,255,255,.58);line-height:1.72;margin-top:16px}
+.iqh h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.9rem);color:#f5ede0;font-style:italic;margin-top:12px}
+.iqh p{font-size:1.04rem;color:rgba(230,215,190,.60);line-height:1.72;margin-top:16px}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .fg1{display:flex;flex-direction:column;gap:7px}
 .fg1.fu{grid-column:1/-1}
 .fg1 label{font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
 .fg1 input,.fg1 select,.fg1 textarea{
-  background:rgba(255,255,255,.08);border:1px solid rgba(197,160,89,.28);
-  color:#fff;padding:12px 17px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(197,160,89,.30);
+  color:#f0e8d0;padding:12px 17px;
   font-family:'Cormorant Garamond',serif;font-size:1rem;
   transition:border-color .3s,background .3s;outline:none;width:100%;
   -webkit-appearance:none;
 }
-.fg1 input::placeholder,.fg1 textarea::placeholder{color:rgba(255,255,255,.3)}
+.fg1 input::placeholder,.fg1 textarea::placeholder{color:rgba(220,200,170,.35)}
 .fg1 input:focus,.fg1 select:focus,.fg1 textarea:focus{border-color:var(--gold);background:rgba(255,255,255,.12)}
-.fg1 select{color:rgba(255,255,255,.75)}
-.fg1 select option{background:var(--navy);color:#fff}
+.fg1 select{color:rgba(230,210,180,.80)}
+.fg1 select option{background:#0a1428;color:#f0e8d0}
 .fg1 textarea{min-height:125px;resize:vertical}
 .fsb{text-align:center;margin-top:30px}
-.bts{
-  display:inline-block;padding:16px 56px;
-  font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;
-  letter-spacing:2.5px;text-transform:uppercase;
-  background:var(--gold);color:#fff;border:none;cursor:pointer;transition:all .3s;
-}
-.bts:hover{background:var(--gold-light);color:#333;transform:translateY(-2px)}
-.fn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:rgba(255,255,255,.38);margin-top:13px}
+.bts{display:inline-block;padding:16px 56px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--gold);color:#fff;border:none;cursor:pointer;transition:all .3s;}
+.bts:hover{background:var(--gold-light);color:#2a1a00;transform:translateY(-2px)}
+.fn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:rgba(200,185,155,.40);margin-top:13px}
 
 /* ══════════════════════════════════════════
    FOOTER
 ══════════════════════════════════════════ */
 #foot{
-  background:var(--blue);padding:42px 5%;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;
-  position:relative;z-index:1;
+  background:rgba(6,12,30,0.90);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(197,160,89,.22);
+  padding:42px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;position:relative;z-index:1;
 }
-.fb .fn1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:2px;font-size:.76rem;color:#fff}
+.fb .fn1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:2px;font-size:.76rem;color:#f5ede0}
 .fb .fu{color:var(--gold);font-size:.67rem;font-family:'Montserrat',sans-serif}
-.fnv a{font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:1px;color:rgba(255,255,255,.44);text-decoration:none;margin-right:16px;transition:color .2s}
+.fnv a{font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:1px;color:rgba(220,200,170,.45);text-decoration:none;margin-right:16px;transition:color .2s}
 .fnv a:hover{color:var(--gold)}
-.fc{font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(255,255,255,.35)}
+.fc{font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(200,180,150,.35)}
 
 /* ══════════════════════════════════════════
    RESPONSIVE
@@ -348,17 +363,13 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   .w{padding:0 22px}
   .sec{padding:68px 0}
   .strip{padding:34px 22px}
-  #wm-logo{width:250px;height:250px}
+  #wm-logo{width:260px;height:260px}
 }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════════════
-     GLOBAL ROTATING BACKGROUND ENGINE
-     All 6 images (0.jpg – 5.jpg) from the repository
-     Rotate every 40 seconds across the ENTIRE site
-════════════════════════════════════════════════════════ -->
+<!-- GLOBAL ROTATING BACKGROUND ENGINE -->
 <div id="bg-engine">
   <div class="bg-layer active" id="L0"></div>
   <div class="bg-layer" id="L1"></div>
@@ -368,10 +379,10 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   <div class="bg-layer" id="L5"></div>
 </div>
 
-<!-- Semi-transparent veil keeps content readable -->
+<!-- Very faint warm veil — backgrounds clearly visible through it -->
 <div id="bg-veil"></div>
 
-<!-- PERMANENT WATERMARK LOGO — centre of every page -->
+<!-- WATERMARK LOGO — now opaque enough to see clearly -->
 <div id="wm-logo">
   <img
     src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/logo.png"
@@ -381,9 +392,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 </div>
 <div id="wm-om">OM</div>
 
-<!-- ════════════════════════════════════════════════════════
-     NAV — Logo top-left, dropdown + CTA right
-════════════════════════════════════════════════════════ -->
+<!-- NAV -->
 <nav id="nav">
   <a href="#hero" class="nb">
     <img
@@ -422,10 +431,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </ul>
 </nav>
 
-<!-- ════════════════════════════════════════════════════════
-     HERO — Has its own dark overlay so text is readable
-     Background images still visible beneath the overlay
-════════════════════════════════════════════════════════ -->
+<!-- HERO -->
 <section id="hero">
   <div class="hero-dk"></div>
   <div class="hic">
@@ -444,10 +450,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════════════════
-     ABOUT AUTHOR
-     Background is semi-transparent so global BG shows through
-════════════════════════════════════════════════════════ -->
+<!-- AUTHOR -->
 <section id="author">
   <div class="w">
     <div class="ag">
@@ -477,7 +480,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
         <h2 class="ttl">A Life in <em>Pursuit of the Ancient</em> Science</h2>
         <p>Naredla Rama Chandra's journey into the Natya Shastra began not in a library but in a living tradition — through decades of immersion in classical Indian performance, Sanskrit scholarship, and the living Parampara (lineage) of the 18 Siddhas. What began as cultural curiosity evolved into a rigorous interdisciplinary research programme spanning over twenty years.</p>
         <p>His thesis works, published under <em>Aesthetics of Society</em>, represent the first systematic attempt to decode the Natya Shastra through the simultaneous lenses of Artificial Intelligence, Neuroscience, Medical Science, Bio-Acoustics, and the Science of Saptaswaras. Each chapter is anchored in the original Sanskrit Shlokas — tracing from the ancient verse to the modern laboratory finding.</p>
-        <p>The author's central argument — that the Natya Shastra is not a text about performance but a precision-encoded manual of human consciousness science — challenges both Indological orthodoxy and Western neuroscience's amnesia about non-Western empirical traditions. His work has drawn engagement from researchers in India, Japan, the United States, and the European Institute for Consciousness Studies.</p>
+        <p>The author's central argument — that the Natya Shastra is not a text about performance but a precision-encoded manual of human consciousness science — challenges both Indological orthodoxy and Western neuroscience's amnesia about non-Western empirical traditions.</p>
         <div class="af">
           <div class="afi"><span class="ico">🤖</span><h4>AI &amp; Pattern Intelligence</h4><p>Natya Shastra's movement grammar as proto-computational logic</p></div>
           <div class="afi"><span class="ico">🧠</span><h4>Neuroscience</h4><p>108 Karanas and bilateral brain synchronization protocols</p></div>
@@ -491,8 +494,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div>
 </section>
 
-<!-- ═══ TOPIC I — AI PAGE 1 ═══════════════════════════════════════ -->
-<div class="strip" id="ai1" style="background:linear-gradient(100deg,rgba(15,34,64,.98),rgba(26,54,93,.98))">
+<!-- ═══ TOPIC I — AI PAGE 1 ═══ -->
+<div class="strip" id="ai1" style="background:linear-gradient(100deg,rgba(10,24,52,.86),rgba(18,40,78,.82))">
   <div class="si"><div><div class="sm">Topic I · Page 1 of 2</div><div class="st">Artificial Intelligence &amp; the Natya Shastra</div></div><div class="pg">01</div></div>
 </div>
 <section class="sec sec-lt">
@@ -520,8 +523,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div></div>
 </section>
 
-<!-- ═══ TOPIC I — AI PAGE 2 ═══════════════════════════════════════ -->
-<div class="strip" id="ai2" style="background:linear-gradient(100deg,rgba(26,42,10,.98),rgba(13,51,32,.98))">
+<!-- ═══ TOPIC I — AI PAGE 2 ═══ -->
+<div class="strip" id="ai2" style="background:linear-gradient(100deg,rgba(14,40,8,.86),rgba(8,48,22,.82))">
   <div class="si"><div><div class="sm">Topic I · Page 2 of 2</div><div class="st">Machine Learning &amp; the Rasa-Bhava Network</div></div><div class="pg">02</div></div>
 </div>
 <section class="sec sec-dk">
@@ -550,8 +553,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC II — NEUROSCIENCE PAGE 1 ═══════════════════════════ -->
-<div class="strip" id="n1" style="background:linear-gradient(100deg,rgba(42,15,64,.98),rgba(26,15,42,.98))">
+<!-- ═══ TOPIC II — NEUROSCIENCE PAGE 1 ═══ -->
+<div class="strip" id="n1" style="background:linear-gradient(100deg,rgba(34,8,54,.86),rgba(20,8,38,.82))">
   <div class="si"><div><div class="sm">Topic II · Page 1 of 2</div><div class="st">Neuroscience &amp; the 108 Karanas</div></div><div class="pg">03</div></div>
 </div>
 <section class="sec sec-cr">
@@ -579,8 +582,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div></div>
 </section>
 
-<!-- ═══ TOPIC II — NEUROSCIENCE PAGE 2 ═══════════════════════════ -->
-<div class="strip" id="n2" style="background:linear-gradient(100deg,rgba(26,10,42,.98),rgba(42,21,64,.98))">
+<!-- ═══ TOPIC II — NEUROSCIENCE PAGE 2 ═══ -->
+<div class="strip" id="n2" style="background:linear-gradient(100deg,rgba(22,8,40,.86),rgba(36,14,58,.82))">
   <div class="si"><div><div class="sm">Topic II · Page 2 of 2</div><div class="st">Default Mode Network &amp; the Nine Rasas</div></div><div class="pg">04</div></div>
 </div>
 <section class="sec sec-dk">
@@ -609,8 +612,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC III — MEDICAL PAGE 1 ═══════════════════════════════ -->
-<div class="strip" id="m1" style="background:linear-gradient(100deg,rgba(10,42,10,.98),rgba(13,64,13,.98))">
+<!-- ═══ TOPIC III — MEDICAL PAGE 1 ═══ -->
+<div class="strip" id="m1" style="background:linear-gradient(100deg,rgba(6,36,6,.86),rgba(8,52,8,.82))">
   <div class="si"><div><div class="sm">Topic III · Page 1 of 2</div><div class="st">Medical Sciences &amp; the Karana Protocols</div></div><div class="pg">05</div></div>
 </div>
 <section class="sec sec-lt">
@@ -621,7 +624,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
       <p class="cp">The clinical applications of Karana practice have been documented in contemporary medical literature with increasing rigour. The precise biomechanical architecture of each Karana — engaging specific kinetic chains, vestibular circuits, and proprioceptive pathways — makes the 108-Karana sequence the world's oldest systematic vestibular rehabilitation protocol.</p>
       <p class="cp">In Parkinson's Disease management, structured Karana practice has demonstrated statistically significant tremor reduction — consistent with the known mechanisms of rhythmic movement therapy in basal ganglia dysfunction. The precise temporal patterning of Tala-synchronized Karana sequences provides the external rhythmic cue that the damaged dopaminergic circuits in Parkinson's patients can no longer self-generate.</p>
       <div class="pq"><p>"The Karana sequence constitutes, in modern clinical terms, the world's oldest integrated vestibular-proprioceptive-cognitive rehabilitation protocol."</p></div>
-      <p class="cp">Post-stroke proprioceptive recovery represents another frontier. Stroke patients who undertook Karana-based movement therapy showed accelerated re-establishment of motor engrams compared to conventional physiotherapy controls. The rich symbolic and emotional content of each Karana provides a cognitive scaffold that pure physiotherapy lacks.</p>
+      <p class="cp">Post-stroke proprioceptive recovery represents another frontier. Stroke patients who undertook Karana-based movement therapy showed accelerated re-establishment of motor engrams compared to conventional physiotherapy controls.</p>
       <div class="rl">
         <div class="ri"><span class="ric">⚕️</span><div><div class="rt">Vestibular Rehabilitation</div><div class="rd">Karana sequence as vestibular-cerebellar rehabilitation in balance disorder patients</div></div></div>
         <div class="ri"><span class="ric">🫀</span><div><div class="rt">Parkinson's Tremor Reduction</div><div class="rd">Tala-synchronized Karana: external rhythmic cueing for basal ganglia dysfunction</div></div></div>
@@ -638,8 +641,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div></div>
 </section>
 
-<!-- ═══ TOPIC III — MEDICAL PAGE 2 ═══════════════════════════════ -->
-<div class="strip" id="m2" style="background:linear-gradient(100deg,rgba(10,42,21,.98),rgba(13,58,26,.98))">
+<!-- ═══ TOPIC III — MEDICAL PAGE 2 ═══ -->
+<div class="strip" id="m2" style="background:linear-gradient(100deg,rgba(6,38,14,.86),rgba(8,50,18,.82))">
   <div class="si"><div><div class="sm">Topic III · Page 2 of 2</div><div class="st">Marma Therapy &amp; Endocrine Modulation</div></div><div class="pg">06</div></div>
 </div>
 <section class="sec sec-dk">
@@ -650,7 +653,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
       <p class="cp">The Natya Shastra's mapping of 108 Karanas onto 108 Marma Sthanas (vital neurovascular junctions) constitutes a complete system of movement-based acupuncture therapy. Each Marma is a junction point where muscle, bone, vein, ligament, and joint meet — creating a neurovascular confluence that, when stimulated, produces measurable systemic effects.</p>
       <p class="cp">The sequence of Mudras (hand gestures) — with their precise finger configurations and pressure points — stimulates specific acupressure meridians connected to glandular function. Clinical applications of Mudra-based therapy have demonstrated measurable effects on cortisol regulation, thyroid function, and melatonin production in preliminary studies.</p>
       <div class="pq"><p>"Each Mudra is an endocrine modulation protocol — precise finger geometry creating measurable glandular effects through acupressure meridian activation."</p></div>
-      <p class="cp">An 8-week Karana training protocol produced measurable BDNF elevation in practitioners, with correlating improvements in working memory, processing speed, and emotional regulation. This is the neurobiological mechanism by which the Natya Shastra achieves cognitive longevity through movement.</p>
+      <p class="cp">An 8-week Karana training protocol produced measurable BDNF elevation in practitioners, with correlating improvements in working memory, processing speed, and emotional regulation.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🎯</span><div><div class="rt">Marma-Acupuncture Correspondence</div><div class="rd">Anatomical mapping confirms 108 Marmas align with WHO acupuncture point locations</div></div></div>
         <div class="ri"><span class="ric">🧬</span><div><div class="rt">BDNF Elevation Studies</div><div class="rd">8-week Karana protocol: significant BDNF increase + improved cognitive performance</div></div></div>
@@ -668,8 +671,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC IV — SCIENCE OF SOUND PAGE 1 ═══════════════════════ -->
-<div class="strip" id="so1" style="background:linear-gradient(100deg,rgba(42,26,10,.98),rgba(64,40,15,.98))">
+<!-- ═══ TOPIC IV — SCIENCE OF SOUND PAGE 1 ═══ -->
+<div class="strip" id="so1" style="background:linear-gradient(100deg,rgba(40,20,6,.86),rgba(58,32,8,.82))">
   <div class="si"><div><div class="sm">Topic IV · Page 1 of 2</div><div class="st">Science of Sound · Nada Brahman</div></div><div class="pg">07</div></div>
 </div>
 <section class="sec sec-cr">
@@ -687,7 +690,7 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
       <p class="cp">The Natya Shastra's acoustic framework begins with a cosmological claim that modern physics has spent a century approaching: that the universe is fundamentally vibrational. The distinction between Ahata Nada (struck sound) and Anahata Nada (unstruck sound — the primordial vibrational substrate of consciousness) maps precisely onto modern physics' distinction between classical acoustic waves and quantum field fluctuations.</p>
       <p class="cp">The Shruti system — the Natya Shastra's micro-tonal framework of 22 divisions within the octave — predates by two millennia the discoveries of psychoacoustics. Contemporary bio-acoustic research has confirmed that specific Shruti intervals produce demonstrably different HRV responses — some parasympathetic-activating, others sympathetic-arousing.</p>
       <div class="pq"><p>"The Natya Shastra's 22 Shrutis are an ancient micro-tonal pharmacopoeia — each frequency ratio a precisely calibrated physiological intervention."</p></div>
-      <p class="cp">The concept of Nada Brahman — sound as the creative substrate of existence — is encoded throughout the Natya Shastra not as metaphysics but as experimental protocol. When the performer sings specific Beeja Aksharas while performing corresponding Karanas, the simultaneous somatic vibration creates a coupled oscillation system — measurable as coherent standing waves in the bio-electric field.</p>
+      <p class="cp">The concept of Nada Brahman — sound as the creative substrate of existence — is encoded throughout the Natya Shastra not as metaphysics but as experimental protocol. When the performer sings specific Beeja Aksharas while performing corresponding Karanas, the simultaneous somatic vibration creates a coupled oscillation system.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🎵</span><div><div class="rt">22 Shrutis &amp; HRV Response</div><div class="rd">Specific Shruti intervals produce distinct autonomic nervous system signatures</div></div></div>
         <div class="ri"><span class="ric">🌊</span><div><div class="rt">Bio-Acoustic Medicine</div><div class="rd">Raga pharmacopoeia: each Raga mapped to specific glandular and neural targets</div></div></div>
@@ -697,8 +700,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div></div>
 </section>
 
-<!-- ═══ TOPIC IV — SCIENCE OF SOUND PAGE 2 ═══════════════════════ -->
-<div class="strip" id="so2" style="background:linear-gradient(100deg,rgba(48,21,6,.98),rgba(74,32,16,.98))">
+<!-- ═══ TOPIC IV — SCIENCE OF SOUND PAGE 2 ═══ -->
+<div class="strip" id="so2" style="background:linear-gradient(100deg,rgba(46,18,4,.86),rgba(68,28,10,.82))">
   <div class="si"><div><div class="sm">Topic IV · Page 2 of 2</div><div class="st">Raga Pharmacopoeia &amp; Human Existence</div></div><div class="pg">08</div></div>
 </div>
 <section class="sec sec-dk">
@@ -727,8 +730,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC V — SAPTASWARAS PAGE 1 ══════════════════════════════ -->
-<div class="strip" id="sw1" style="background:linear-gradient(100deg,rgba(15,34,64,.98),rgba(26,54,93,.98))">
+<!-- ═══ TOPIC V — SAPTASWARAS PAGE 1 ═══ -->
+<div class="strip" id="sw1" style="background:linear-gradient(100deg,rgba(10,26,52,.86),rgba(18,42,78,.82))">
   <div class="si"><div><div class="sm">Topic V · Page 1 of 2</div><div class="st">Saptaswaras — The Seven Cosmic Frequencies</div></div><div class="pg">09</div></div>
 </div>
 <section class="sec sec-lt">
@@ -756,8 +759,8 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
   </div></div>
 </section>
 
-<!-- ═══ TOPIC V — SAPTASWARAS PAGE 2 ══════════════════════════════ -->
-<div class="strip" id="sw2" style="background:linear-gradient(100deg,rgba(10,26,42,.98),rgba(15,34,64,.98))">
+<!-- ═══ TOPIC V — SAPTASWARAS PAGE 2 ═══ -->
+<div class="strip" id="sw2" style="background:linear-gradient(100deg,rgba(8,22,38,.86),rgba(12,30,56,.82))">
   <div class="si"><div><div class="sm">Topic V · Page 2 of 2</div><div class="st">Saptaswaras, Consciousness &amp; Cosmic Harmony</div></div><div class="pg">10</div></div>
 </div>
 <section class="sec sec-dk">
@@ -838,93 +841,68 @@ body{font-family:'Cormorant Garamond',serif;background:#fff;color:#2a2a2a;overfl
 </footer>
 
 <script>
-/* ════════════════════════════════════════════════
-   BACKGROUND IMAGE SYSTEM
-   Repository: ramachandra1975/natyashastra-/main/
-   Images: 0.jpg, 1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg
-   Each image rotates globally every 40 seconds.
-   The SAME background shows on ALL sections simultaneously
-   because layers are fixed-position behind everything.
-════════════════════════════════════════════════ */
+/* ─── BACKGROUND IMAGE ROTATION ─── */
 const REPO = 'https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/';
 const IMG_FILES = ['0.jpg','1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
 const layers = document.querySelectorAll('.bg-layer');
 let activeBg = 0;
 
-/* Pre-load each image and apply it to its layer */
 IMG_FILES.forEach((file, i) => {
   if (!layers[i]) return;
   const img = new Image();
-  img.onload = () => {
-    layers[i].style.backgroundImage = `url('${REPO}${file}')`;
-  };
-  /* onerror: layer stays invisible, CSS fallback handles it */
+  img.onload = () => { layers[i].style.backgroundImage = `url('${REPO}${file}')`; };
   img.src = REPO + file;
 });
 
-/* Rotate every 40 seconds with 2.5s crossfade */
+// Start first layer immediately visible
+layers[0].style.backgroundImage = `url('${REPO}${IMG_FILES[0]}')`;
+
 setInterval(() => {
   layers[activeBg].classList.remove('active');
   activeBg = (activeBg + 1) % layers.length;
   layers[activeBg].classList.add('active');
 }, 40000);
 
-/* ════════════════════════════════════════════════
-   WATERMARK LOGO
-   If logo.png fails to load, show OM fallback
-════════════════════════════════════════════════ */
+/* ─── WATERMARK FALLBACK ─── */
 (function(){
   const wmImg = document.querySelector('#wm-logo img');
   if (!wmImg) return;
-  wmImg.addEventListener('load', () => {
-    document.getElementById('wm-om').style.display = 'none';
-  });
   wmImg.addEventListener('error', () => {
-    document.getElementById('wm-logo').style.display = 'none';
-    document.getElementById('wm-om').style.display = 'block';
+    document.getElementById('wm-logo').style.display='none';
+    document.getElementById('wm-om').style.display='block';
   });
 })();
 
-/* ════════════════════════════════════════════════
-   NAV SCROLL SHADOW
-════════════════════════════════════════════════ */
+/* ─── NAV SCROLL SHADOW ─── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('sc', window.scrollY > 40);
-}, { passive: true });
+}, { passive:true });
 
-/* ════════════════════════════════════════════════
-   SMOOTH SCROLL for all anchor links
-════════════════════════════════════════════════ */
+/* ─── SMOOTH SCROLL ─── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
     if (target) {
       e.preventDefault();
-      const top = target.getBoundingClientRect().top + window.scrollY - 68;
-      window.scrollTo({ top, behavior: 'smooth' });
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 68, behavior:'smooth' });
     }
   });
 });
 
-/* ════════════════════════════════════════════════
-   INQUIRY FORM SUBMIT
-════════════════════════════════════════════════ */
+/* ─── INQUIRY SUBMIT ─── */
 function doSub() {
   const name  = document.getElementById('fn').value.trim();
   const email = document.getElementById('fe').value.trim();
   const msg   = document.getElementById('fq').value.trim();
-  if (!name || !email || !msg) {
-    alert('Please complete Name, Email, and Inquiry fields.');
-    return;
-  }
-  const btn  = document.querySelector('.bts');
+  if (!name || !email || !msg) { alert('Please complete Name, Email, and Inquiry fields.'); return; }
+  const btn = document.querySelector('.bts');
   btn.textContent = 'Inquiry Submitted ✓';
   btn.style.background = '#2a5a2a';
   btn.disabled = true;
   const note = document.getElementById('fnote');
   note.textContent = 'Thank you, ' + name + '. Your inquiry has been received and will be reviewed within 7–14 days.';
-  note.style.color = 'rgba(197,220,197,.75)';
+  note.style.color = 'rgba(180,220,180,.75)';
 }
 </script>
 </body>
