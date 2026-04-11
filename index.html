@@ -4,402 +4,484 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Natya Shastra — The Cosmic Science | Aesthetics of Society</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════ */
 :root{
-  --gold:#c5a059;--gold-light:#e2c98a;
-  --navy:#0f2240;--blue:#1a365d;
-  --cream:#fdfaf5;--cream2:#f5efe3;
-  --muted:#555;--border:rgba(197,160,89,0.35);
-  /* Glass surfaces */
-  --glass-light: rgba(255,252,245, 0.62);
-  --glass-dark:  rgba(10, 20, 45,  0.70);
-  --blur: blur(14px);
+  --gold:      #c5a059;
+  --gold-lt:   #e2c98a;
+  --gold-dk:   #9a7a38;
+  /* text on LIGHT glass */
+  --ink-d1: #160e02;   /* headings */
+  --ink-d2: #2c1e08;   /* body */
+  --ink-d3: #4a3618;   /* muted */
+  /* text on DARK glass */
+  --ink-l1: #f8f0de;   /* headings */
+  --ink-l2: #e8d8b8;   /* body */
+  --ink-l3: rgba(232,216,184,.62); /* muted */
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;overflow-x:hidden}
 
-/* ══════════════════════════════════════════
-   GLOBAL ROTATING BACKGROUND SYSTEM
-   Fixed behind everything — NOW VISIBLE
-   Veil is very light so images show clearly
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Cormorant Garamond',serif;
+  /* Fallback gradient so the page always looks good even before images load */
+  background: linear-gradient(135deg,#1a0e04 0%,#0c1428 40%,#1a0a0a 100%);
+  color:var(--ink-d2);
+  overflow-x:hidden;
+  line-height:1.7;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYER STACK
+   z -3  bg-engine  ← 6 rotating full-screen photos
+   z -2  bg-veil    ← ultra-thin warm tint (barely-there)
+   z -1  wm-logo    ← ghost watermark, always centred
+   z  1+ page glass panels
+═══════════════════════════════════════════════════════════ */
 #bg-engine{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
+  /* Fallback so there's always a rich base even before images arrive */
+  background: linear-gradient(160deg,#1a0e04,#0c1428,#1a0a0a);
 }
 .bg-layer{
   position:absolute;inset:0;
-  background-size:cover;background-position:center center;background-repeat:no-repeat;
-  opacity:0;transition:opacity 3s ease-in-out;
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+  opacity:0;
+  transition:opacity 1.8s ease-in-out;
+  will-change:opacity;
 }
 .bg-layer.active{opacity:1}
 
-/* Very light veil — just takes the raw edge off, images still vivid */
+/* Veil: ultra-light warm tint — images show fully, just softened */
 #bg-veil{
   position:fixed;inset:0;z-index:-2;pointer-events:none;
-  background: rgba(245,235,215, 0.18);   /* near-transparent warm tint */
+  background:rgba(120,70,10, 0.08);
 }
 
-/* ══════════════════════════════════════════
-   WATERMARK LOGO — now clearly visible
-   opacity raised from 0.08 → 0.22
-   Soft gold glow added
-══════════════════════════════════════════ */
+/* Watermark: visible ghost logo, always centred behind content */
 #wm-logo{
   position:fixed;top:50%;left:50%;
   transform:translate(-50%,-50%);
-  z-index:-1;pointer-events:none;
-  width:480px;height:480px;
-  opacity:0.22;                    /* was 0.08 — now clearly seen */
-  filter: drop-shadow(0 0 32px rgba(197,160,89,0.5));
+  z-index:0;pointer-events:none;
+  width:420px;height:420px;
+  opacity:0.25;
+  filter:drop-shadow(0 0 26px rgba(197,160,89,.50));
+  mix-blend-mode:luminosity;
 }
 #wm-logo img{width:100%;height:100%;object-fit:contain;display:block}
 #wm-om{
   position:fixed;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  z-index:-1;pointer-events:none;
+  transform:translate(-50%,-52%);
+  z-index:0;pointer-events:none;
   font-family:'Playfair Display',serif;
-  font-size:22rem;font-weight:700;
-  color:var(--gold);
-  opacity:0.18;                    /* was 0.04 — now visible */
-  filter: drop-shadow(0 0 24px rgba(197,160,89,0.4));
-  white-space:nowrap;user-select:none;letter-spacing:-8px;
+  font-size:16rem;font-weight:700;
+  color:var(--gold);opacity:0.20;
+  filter:drop-shadow(0 0 18px rgba(197,160,89,.40));
+  white-space:nowrap;user-select:none;
   display:none;
 }
 
-/* ══════════════════════════════════════════
-   NAV — Frosted gold-border strip
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   TYPOGRAPHY SCALE (consistent — no size below 0.60rem)
+   T1  Hero h1      : clamp(2.4rem, 6vw, 5rem)
+   T2  Section .ttl : clamp(1.8rem, 3vw, 2.8rem)
+   T3  Strip .st    : clamp(1.3rem, 2vw, 2rem)
+   T4  Pull quote   : 1.18rem
+   T5  Body .cp     : 1.06rem
+   T6  Shloka .ss   : 1.06rem  /  .str 0.96rem
+   T7  Label .lbl   : 0.66rem
+   T8  Micro caps   : 0.60–0.64rem  (floor = 0.60rem)
+═══════════════════════════════════════════════════════════ */
+.lbl{
+  display:block;
+  font-family:'Montserrat',sans-serif;
+  font-size:0.66rem;font-weight:700;
+  letter-spacing:3.8px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;
+}
+.ttl{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,3vw,2.8rem);
+  font-weight:700;line-height:1.1;
+  margin-bottom:26px;
+  color:var(--ink-d1);
+}
+.ttl em{color:var(--gold);font-style:italic}
+.cp{
+  font-size:1.06rem;line-height:1.90;
+  color:var(--ink-d2);margin-bottom:20px;text-align:justify;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAV — amber frosted glass; BG fully visible beneath
+═══════════════════════════════════════════════════════════ */
 #nav{
   position:fixed;top:0;left:0;right:0;z-index:9000;
   display:flex;justify-content:space-between;align-items:center;
-  padding:0 4%;height:66px;
-  background:rgba(240,228,200, 0.28);
-  border-bottom:1px solid rgba(197,160,89,.45);
+  padding:0 4%;height:64px;
+  background:rgba(200,155,70, 0.22);
+  border-bottom:1px solid rgba(197,160,89,.35);
   backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-  transition:box-shadow .3s;
+  transition:background .3s,box-shadow .3s;
 }
-#nav.sc{box-shadow:0 4px 40px rgba(197,160,89,.18)}
-
+#nav.sc{
+  background:rgba(200,155,70, 0.40);
+  box-shadow:0 4px 24px rgba(0,0,0,.18);
+}
 .nb{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}
-.nb-img{width:46px;height:46px;object-fit:contain;flex-shrink:0;border-radius:3px}
-.nb-fb{width:46px;height:46px;background:var(--navy);border-radius:3px;display:none;align-items:center;justify-content:center;flex-shrink:0}
-.nb-fb span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;font-weight:700}
-.nb-txt .n1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.71rem;letter-spacing:2.5px;color:var(--blue);text-transform:uppercase}
-.nb-txt .n2{display:block;font-family:'Montserrat',sans-serif;font-size:.6rem;color:var(--gold);letter-spacing:1px}
-
-.nl{display:flex;gap:0;align-items:center;list-style:none;height:66px}
+.nb-img{width:44px;height:44px;object-fit:contain;border-radius:3px;flex-shrink:0}
+.nb-fb{width:44px;height:44px;background:rgba(6,14,40,.75);border-radius:3px;display:none;align-items:center;justify-content:center;flex-shrink:0}
+.nb-fb span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1rem;font-weight:700}
+.nb-txt .n1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.68rem;letter-spacing:2px;color:var(--ink-d1);text-transform:uppercase}
+.nb-txt .n2{display:block;font-family:'Montserrat',sans-serif;font-size:0.60rem;color:var(--gold-dk);letter-spacing:1px}
+.nl{display:flex;align-items:center;list-style:none;height:64px}
 .nl>li{height:100%;display:flex;align-items:center;position:relative}
 .nl>li>a{
-  display:flex;align-items:center;height:100%;padding:0 14px;
-  font-family:'Montserrat',sans-serif;font-size:.61rem;font-weight:700;
-  letter-spacing:1.5px;text-transform:uppercase;
-  color:#1a2e50;text-decoration:none;
-  text-shadow:0 1px 3px rgba(255,248,235,0.7);
-  transition:color .2s;white-space:nowrap;
-  border-bottom:2px solid transparent;
+  display:flex;align-items:center;height:100%;padding:0 13px;
+  font-family:'Montserrat',sans-serif;font-size:0.63rem;font-weight:700;
+  letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--ink-d1);text-decoration:none;
+  border-bottom:2px solid transparent;transition:color .2s;white-space:nowrap;
 }
 .nl>li>a:hover,.nl>li>a.act{color:var(--gold)}
 .nl>li>a.act{border-bottom-color:var(--gold)}
-
 .hd>a::after{content:' ▾';font-size:.52rem;opacity:.7}
 .dm{
   position:absolute;top:100%;left:50%;
-  transform:translateX(-50%) translateY(-8px);
-  background:rgba(240,228,200,0.82);
+  transform:translateX(-50%) translateY(-6px);
+  background:rgba(230,200,140,0.90);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  min-width:260px;
-  border:1px solid rgba(197,160,89,.45);
-  border-top:2px solid var(--gold);
-  padding:6px 0;
-  opacity:0;pointer-events:none;
-  transition:opacity .22s,transform .22s;
-  box-shadow:0 20px 60px rgba(0,0,0,.22);z-index:200;
+  min-width:262px;
+  border:1px solid rgba(197,160,89,.40);border-top:2px solid var(--gold);
+  padding:5px 0;opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;
+  box-shadow:0 18px 50px rgba(0,0,0,.20);z-index:200;
 }
 .hd:hover .dm{opacity:1;pointer-events:all;transform:translateX(-50%) translateY(0)}
 .dm a{
-  display:flex;align-items:center;gap:10px;padding:10px 22px;
-  font-family:'Montserrat',sans-serif;font-size:.57rem;
-  font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--blue);text-decoration:none;
-  transition:background .18s,color .18s;border-left:2px solid transparent;
+  display:flex;align-items:center;gap:10px;padding:10px 20px;
+  font-family:'Montserrat',sans-serif;font-size:0.60rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--ink-d1);text-decoration:none;
+  border-left:2px solid transparent;transition:background .15s,color .15s;
 }
-.dm a:hover{background:rgba(197,160,89,.12);color:var(--gold);border-left-color:var(--gold)}
-.dm a .di{font-size:12px;opacity:.65;flex-shrink:0}
-.dmdiv{height:1px;background:rgba(197,160,89,.22);margin:4px 0}
-
-.ncta{border:1px solid var(--gold)!important;padding:8px 18px!important;height:auto!important;color:var(--gold)!important;margin-left:8px;transition:all .25s!important;}
+.dm a:hover{background:rgba(197,160,89,.16);color:var(--gold-dk);border-left-color:var(--gold)}
+.dm a .di{font-size:11px;opacity:.6;flex-shrink:0}
+.dmdiv{height:1px;background:rgba(197,160,89,.24);margin:3px 0}
+.ncta{border:1px solid var(--gold)!important;padding:7px 16px!important;height:auto!important;color:var(--gold-dk)!important;margin-left:8px;transition:all .22s!important;}
 .ncta:hover{background:var(--gold)!important;color:#fff!important}
-
 @media(max-width:860px){.nl{display:none}}
 
-/* ══════════════════════════════════════════
-   HERO — Dark overlay, image visible beneath
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   HERO — moderate overlay (not pitch black), image clearly visible
+═══════════════════════════════════════════════════════════ */
 #hero{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  text-align:center;padding:140px 40px 90px;
-  position:relative;overflow:hidden;
+  text-align:center;padding:130px 40px 80px;
+  position:relative;
 }
-.hero-dk{
+.hero-overlay{
   position:absolute;inset:0;z-index:1;
-  background:linear-gradient(160deg,rgba(8,16,36,.78),rgba(12,28,56,.72),rgba(4,12,28,.80));
+  background:linear-gradient(160deg,
+    rgba(8,14,30,.48) 0%,
+    rgba(10,20,42,.40) 50%,
+    rgba(6,12,26,.50) 100%);
 }
-.hic{position:relative;z-index:2;max-width:950px;margin:0 auto}
-.hrul{width:48px;height:2px;background:var(--gold);margin:0 auto 24px;animation:fu .7s ease both}
-.htag{font-family:'Montserrat',sans-serif;font-size:.64rem;font-weight:700;letter-spacing:5px;color:var(--gold);text-transform:uppercase;margin-bottom:22px;animation:fu .8s .06s ease both;}
-#hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,7vw,5.6rem);color:#fff;font-weight:700;line-height:1.04;margin-bottom:24px;animation:fu .9s .12s ease both;}
-#hero h1 em{color:var(--gold);font-style:italic}
-.hsub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.1rem,2.2vw,1.42rem);color:rgba(255,255,255,.72);max-width:760px;line-height:1.75;margin:0 auto 36px;animation:fu 1s .18s ease both;}
-.hpills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:34px;animation:fu 1s .3s ease both;}
-.hp{font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;padding:9px 20px;border:1px solid rgba(197,160,89,.50);color:var(--gold-light);text-decoration:none;background:rgba(0,0,0,.22);transition:all .3s;backdrop-filter:blur(6px);}
+.hic{position:relative;z-index:2;max-width:920px;margin:0 auto}
+.hrul{width:44px;height:2px;background:var(--gold);margin:0 auto 22px;animation:fu .6s ease both}
+.htag{
+  font-family:'Montserrat',sans-serif;font-size:0.64rem;font-weight:700;
+  letter-spacing:4.5px;color:var(--gold-lt);text-transform:uppercase;
+  margin-bottom:20px;animation:fu .7s .05s ease both;
+}
+#hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.4rem,6vw,5rem);
+  color:#fff;font-weight:700;line-height:1.05;
+  margin-bottom:22px;animation:fu .8s .10s ease both;
+}
+#hero h1 em{color:var(--gold-lt);font-style:italic}
+.hsub{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(1.06rem,2vw,1.36rem);
+  color:rgba(255,244,215,.78);max-width:740px;
+  line-height:1.8;margin:0 auto 32px;
+  animation:fu .9s .15s ease both;
+}
+.hpills{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:28px;animation:fu 1s .22s ease both;}
+.hp{
+  font-family:'Montserrat',sans-serif;font-size:0.60rem;font-weight:700;
+  letter-spacing:1.6px;text-transform:uppercase;
+  padding:8px 18px;
+  border:1px solid rgba(197,160,89,.48);
+  color:var(--gold-lt);text-decoration:none;
+  background:rgba(0,0,0,.16);backdrop-filter:blur(6px);
+  transition:all .25s;
+}
 .hp:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
-@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* ══════════════════════════════════════════
-   SECTIONS — FROSTED GLASS PANELS
-   Background images shine through clearly
-   Light sections: warm frosted glass
-   Dark sections: deep navy frosted glass
-══════════════════════════════════════════ */
-.sec{padding:96px 0;position:relative;z-index:1}
+/* ═══════════════════════════════════════════════════════════
+   SECTION GLASS PANELS
+   KEY: background opacity 0.22–0.26 on light, 0.44–0.48 on dark
+   This lets rotating background photos show through CLEARLY.
+   backdrop-filter:blur(16px) adds depth without hiding the image.
+═══════════════════════════════════════════════════════════ */
+.sec{padding:88px 0;position:relative;z-index:1}
 
-/* LIGHT section — warm frosted glass, warm gold border top */
+/* LIGHT sections — warm amber glass, images very visible */
 .sec-lt{
-  background: rgba(240,225,195, 0.22);
-  backdrop-filter: blur(22px);-webkit-backdrop-filter:blur(22px);
-  border-top:1px solid rgba(197,160,89,.30);
-  border-bottom:1px solid rgba(197,160,89,.18);
-}
-.sec-cr{
-  background: rgba(235,218,185, 0.20);
-  backdrop-filter: blur(22px);-webkit-backdrop-filter:blur(22px);
-  border-top:1px solid rgba(197,160,89,.25);
-  border-bottom:1px solid rgba(197,160,89,.15);
-}
-
-/* DARK section — deep navy with transparency so BG shows */
-.sec-dk{
-  background: rgba(6, 14, 38, 0.62)!important;
-  backdrop-filter: blur(22px);-webkit-backdrop-filter:blur(22px);
-  border-top:1px solid rgba(197,160,89,.22);
+  background:rgba(220,175,100, 0.22);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(197,160,89,.24);
   border-bottom:1px solid rgba(197,160,89,.12);
 }
-.sec-dk .ttl{color:#f5f0e8}
-.sec-dk .lbl{color:var(--gold-light)}
-.sec-dk .cp{color:rgba(255,248,235,.80)}
-.sec-dk .pq{background:rgba(197,160,89,.08);border-left-color:var(--gold)}
-.sec-dk .pq p{color:#f0e8d0}
-.sec-dk .ri{background:rgba(255,255,255,.06);border-color:rgba(197,160,89,.22)}
-.sec-dk .ri:hover{border-color:var(--gold)}
-.sec-dk .rt{color:var(--gold-light)}
-.sec-dk .rd{color:rgba(255,248,235,.55)}
-.sec-dk .sc{background:rgba(255,255,255,.05);border:1px solid rgba(197,160,89,.25);border-left:3px solid var(--gold)}
-
-/* TOPIC STRIP HEADERS — solid gold-tinged band */
-.strip{
-  padding:46px 52px;position:relative;z-index:1;
-  backdrop-filter: blur(24px);-webkit-backdrop-filter:blur(24px);
-  border-top:2px solid rgba(197,160,89,.40);
-  border-bottom:1px solid rgba(197,160,89,.20);
+.sec-cr{
+  background:rgba(205,165,90, 0.20);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(197,160,89,.20);
+  border-bottom:1px solid rgba(197,160,89,.10);
 }
-/* Each strip has its own overlay applied inline, but we add the blur here */
-.strip .si{max-width:1240px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
-.strip .sm{font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-light);margin-bottom:6px}
-.strip .st{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2.4rem);color:#fff;font-weight:700}
-.strip .pg{font-family:'Playfair Display',serif;font-size:3.8rem;color:rgba(255,255,255,.14);font-weight:700;line-height:1}
 
-/* ══════════════════════════════════════════
-   SHARED TYPOGRAPHY
-══════════════════════════════════════════ */
-.w{max-width:1240px;margin:0 auto;padding:0 52px}
-.lbl{display:block;font-family:'Montserrat',sans-serif;font-size:.61rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
-.ttl{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,4vw,3.3rem);color:var(--blue);font-weight:700;line-height:1.06;margin-bottom:36px}
-.ttl em{color:var(--gold);font-style:italic}
+/* DARK sections — moderate navy glass, images visible, text readable */
+.sec-dk{
+  background:rgba(4,10,28, 0.46)!important;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(197,160,89,.20);
+  border-bottom:1px solid rgba(197,160,89,.10);
+}
+/* Dark-section text overrides */
+.sec-dk .lbl    {color:var(--gold-lt)}
+.sec-dk .ttl    {color:var(--ink-l1)}
+.sec-dk .ttl em {color:var(--gold-lt)}
+.sec-dk .cp     {color:var(--ink-l2)}
+.sec-dk .pq p   {color:var(--ink-l1)}
+.sec-dk .pq     {background:rgba(197,160,89,.08)}
+.sec-dk .rt     {color:var(--gold-lt)}
+.sec-dk .rd     {color:var(--ink-l3)}
+.sec-dk .ri     {background:rgba(255,255,255,.05);border-color:rgba(197,160,89,.20)}
+.sec-dk .ri:hover{border-color:var(--gold);background:rgba(255,255,255,.09)}
 
-.orn{text-align:center;padding:28px 0;position:relative;z-index:1;
-  background:rgba(197,160,89,0.06);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);}
-.orn span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.3rem;letter-spacing:22px;opacity:.85}
+/* TOPIC STRIP BANNERS — thin translucent band, photo behind clearly visible */
+.strip{
+  padding:40px 52px;position:relative;z-index:1;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:2px solid rgba(197,160,89,.30);
+  border-bottom:1px solid rgba(197,160,89,.14);
+}
+.strip .si{max-width:1240px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.strip .sm{font-family:'Montserrat',sans-serif;font-size:0.60rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold-lt);margin-bottom:5px;}
+.strip .st{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,2vw,2rem);color:#fff;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.5);}
+.strip .pg{font-family:'Playfair Display',serif;font-size:3.4rem;color:rgba(255,255,255,.14);font-weight:700;line-height:1;}
 
-/* Two-column grid */
-.tg{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+/* Ornament dividers */
+.orn{
+  text-align:center;padding:22px 0;position:relative;z-index:1;
+  background:rgba(140,95,20,.06);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.orn span{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.2rem;letter-spacing:20px;opacity:.80;}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════════════════ */
+.w{max-width:1240px;margin:0 auto;padding:0 48px}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 .tg.rv{direction:rtl}.tg.rv>*{direction:ltr}
 
-/* Body copy — stronger contrast with text-shadow lift on glass */
-.cp{font-size:1.05rem;line-height:1.92;color:#2a1e0a;margin-bottom:22px;text-align:justify}
-.sec-lt .cp, .sec-cr .cp{
-  color:#1e1508;
-  text-shadow: 0 1px 4px rgba(255,245,220,0.55), 0 0 12px rgba(255,245,220,0.30);
-  font-weight:400;
-}
-
 /* Pull quote */
-.pq{border-left:3px solid var(--gold);padding:20px 30px;background:rgba(197,160,89,.07);margin:28px 0;backdrop-filter:blur(10px);}
-.pq p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.16rem;color:#1e1508;line-height:1.5;margin:0;text-align:left;text-shadow:0 1px 4px rgba(255,245,220,0.5);}
-.sec-dk .pq p{color:#f0e8d0;text-shadow:none;}
-
-/* Research links */
-.rl{margin-top:28px;display:flex;flex-direction:column;gap:10px}
-.ri{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid rgba(197,160,89,.32);background:rgba(240,225,195,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all .3s}
-.ri:hover{border-color:var(--gold);transform:translateX(5px);background:rgba(240,225,195,.35);}
-.ric{font-size:1.1rem;flex-shrink:0}
-.rt{font-family:'Montserrat',sans-serif;font-size:.6rem;font-weight:700;color:#1a2e50;letter-spacing:1px;text-transform:uppercase;text-shadow:0 1px 3px rgba(255,245,220,0.5);}
-.rd{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#3a2e1a;line-height:1.4;text-shadow:0 1px 2px rgba(255,245,220,0.4);}
-
-/* ══════════════════════════════════════════
-   SHLOKA CARDS
-══════════════════════════════════════════ */
-.scc{display:flex;flex-direction:column;gap:20px}
-.sc{
-  background:rgba(8,18,48,0.72);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  padding:28px 32px;position:relative;overflow:hidden;
-  border:1px solid rgba(197,160,89,.22);
+.pq{
   border-left:3px solid var(--gold);
+  padding:18px 26px;
+  background:rgba(197,160,89,.10);
+  margin:24px 0;
+  backdrop-filter:blur(8px);
 }
-.sc::before{content:'"';position:absolute;top:2px;right:14px;font-size:6rem;color:rgba(197,160,89,.09);font-family:'Playfair Display',serif;line-height:1;pointer-events:none}
-.sn{display:block;font-family:'Montserrat',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
-.ss{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.06rem;color:#f0e8d0;line-height:1.68;margin-bottom:11px}
-.str{font-family:'Cormorant Garamond',serif;font-size:.88rem;color:rgba(230,215,185,.60);line-height:1.6;font-style:italic}
-.src{display:block;font-family:'Montserrat',sans-serif;font-size:.48rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-top:11px;padding-top:9px;border-top:1px solid rgba(197,160,89,.20)}
+.pq p{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:1.18rem;line-height:1.55;
+  color:var(--ink-d1);margin:0;text-align:left;
+}
 
-/* ══════════════════════════════════════════
-   AUTHOR SECTION
-══════════════════════════════════════════ */
-#author{
-  background:rgba(235,218,185,0.20)!important;
-  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-  padding:100px 0;position:relative;z-index:1;
-  border-top:2px solid rgba(197,160,89,.32);
-  border-bottom:1px solid rgba(197,160,89,.20);
+/* Research link cards */
+.rl{margin-top:24px;display:flex;flex-direction:column;gap:9px}
+.ri{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border:1px solid rgba(197,160,89,.26);
+  background:rgba(195,155,80,.14);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:all .25s;
 }
-.ag{display:grid;grid-template-columns:370px 1fr;gap:70px;align-items:start}
+.ri:hover{border-color:var(--gold);transform:translateX(4px);background:rgba(195,155,80,.28);}
+.ric{font-size:1rem;flex-shrink:0}
+.rt{font-family:'Montserrat',sans-serif;font-size:0.63rem;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--ink-d1);}
+.rd{font-family:'Cormorant Garamond',serif;font-size:0.96rem;color:var(--ink-d3);line-height:1.42;}
+
+/* Shloka cards */
+.scc{display:flex;flex-direction:column;gap:18px}
+.sc{
+  background:rgba(4,10,32, 0.46);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:26px 30px;position:relative;overflow:hidden;
+  border:1px solid rgba(197,160,89,.20);border-left:3px solid var(--gold);
+}
+.sc::before{
+  content:'"';position:absolute;top:0;right:12px;
+  font-size:5.5rem;color:rgba(197,160,89,.07);
+  font-family:'Playfair Display',serif;line-height:1;pointer-events:none;
+}
+.sn{
+  display:block;font-family:'Montserrat',sans-serif;
+  font-size:0.60rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.ss{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.06rem;color:var(--ink-l1);line-height:1.72;margin-bottom:10px;}
+.str{font-family:'Cormorant Garamond',serif;font-size:0.96rem;color:var(--ink-l3);line-height:1.58;font-style:italic;}
+.src{
+  display:block;font-family:'Montserrat',sans-serif;
+  font-size:0.60rem;color:var(--gold);letter-spacing:1.3px;text-transform:uppercase;
+  margin-top:10px;padding-top:8px;border-top:1px solid rgba(197,160,89,.18);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   AUTHOR SECTION
+═══════════════════════════════════════════════════════════ */
+#author{
+  background:rgba(210,168,90, 0.22)!important;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:96px 0;position:relative;z-index:1;
+  border-top:2px solid rgba(197,160,89,.28);
+  border-bottom:1px solid rgba(197,160,89,.14);
+}
+.ag{display:grid;grid-template-columns:355px 1fr;gap:64px;align-items:start}
 .ap{
-  background:rgba(8,18,48,0.78);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-top:3px solid var(--gold);
-  border:1px solid rgba(197,160,89,.28);
-  border-top:3px solid var(--gold);
+  background:rgba(4,12,40,.50);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(197,160,89,.22);border-top:3px solid var(--gold);
   position:relative;overflow:hidden;
 }
 .aph{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center;display:block}
-.apf{display:none;padding:46px 34px;text-align:center}
-.api{width:86px;height:86px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
-.api span{font-family:'Playfair Display',serif;font-size:1.9rem;color:#fff;font-weight:700}
-.apc{padding:22px 28px 28px;position:relative;z-index:1}
-.apc::after{content:'OM';position:absolute;bottom:-14px;right:-8px;font-family:'Playfair Display',serif;font-size:7rem;color:rgba(197,160,89,.08);pointer-events:none;line-height:1}
-.apn{font-family:'Playfair Display',serif;font-size:1.2rem;color:#fff;margin-bottom:4px}
-.apr{font-family:'Montserrat',sans-serif;font-size:.57rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:13px}
-.apb{font-size:.87rem;color:rgba(220,210,190,.65);line-height:1.65;font-family:'Cormorant Garamond',serif;font-style:italic}
-.apt{display:flex;flex-direction:column;gap:7px;margin-top:16px}
-.at{font-family:'Montserrat',sans-serif;font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(220,210,190,.55);padding:6px 0;border-bottom:1px solid rgba(197,160,89,.16)}
-.ac p{font-size:1.05rem;line-height:1.9;color:#1e1508;margin-bottom:20px;text-align:justify;text-shadow:0 1px 4px rgba(255,245,220,0.5);}
-.af{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:26px}
-.afi{padding:17px;border:1px solid rgba(197,160,89,.30);background:rgba(240,225,195,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:border-color .3s,background .3s}
-.afi:hover{border-color:var(--gold);background:rgba(240,225,195,.38);}
-.afi .ico{font-size:1.1rem;margin-bottom:7px;display:block}
-.afi h4{font-family:'Montserrat',sans-serif;font-size:.59rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#1a2e50;margin-bottom:3px;text-shadow:0 1px 3px rgba(255,245,220,0.5);}
-.afi p{font-size:.83rem;color:#3a2e1a;margin:0;line-height:1.5;text-shadow:0 1px 2px rgba(255,245,220,0.4);}
-
-/* ══════════════════════════════════════════
-   INQUIRY FORM
-══════════════════════════════════════════ */
-#inquiry{
-  background:rgba(6,14,36,0.82)!important;
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  padding:100px 0;position:relative;z-index:1;
-  border-top:2px solid rgba(197,160,89,.28);
+.apf{display:none;padding:44px 32px;text-align:center}
+.api{width:84px;height:84px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.api span{font-family:'Playfair Display',serif;font-size:1.8rem;color:#fff;font-weight:700}
+.apc{padding:20px 26px 26px;position:relative;z-index:1}
+.apc::after{content:'OM';position:absolute;bottom:-10px;right:-6px;font-family:'Playfair Display',serif;font-size:6rem;color:rgba(197,160,89,.07);pointer-events:none;line-height:1}
+.apn{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--ink-l1);margin-bottom:4px}
+.apr{font-family:'Montserrat',sans-serif;font-size:0.60rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:12px}
+.apb{font-size:0.92rem;color:var(--ink-l3);line-height:1.65;font-family:'Cormorant Garamond',serif;font-style:italic}
+.apt{display:flex;flex-direction:column;gap:6px;margin-top:14px}
+.at{font-family:'Montserrat',sans-serif;font-size:0.60rem;letter-spacing:1.4px;text-transform:uppercase;color:rgba(220,200,158,.52);padding:5px 0;border-bottom:1px solid rgba(197,160,89,.13)}
+.ac p{font-size:1.06rem;line-height:1.90;color:var(--ink-d2);margin-bottom:18px;text-align:justify;}
+.af{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.afi{
+  padding:15px;
+  border:1px solid rgba(197,160,89,.26);
+  background:rgba(195,155,80,.14);
+  backdrop-filter:blur(10px);
+  transition:border-color .25s,background .25s;
 }
-.iqi{max-width:820px;margin:0 auto;padding:0 40px}
-.iqh{text-align:center;margin-bottom:58px}
-.iqh h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.9rem);color:#f5ede0;font-style:italic;margin-top:12px}
-.iqh p{font-size:1.04rem;color:rgba(230,215,190,.60);line-height:1.72;margin-top:16px}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.fg1{display:flex;flex-direction:column;gap:7px}
+.afi:hover{border-color:var(--gold);background:rgba(195,155,80,.28)}
+.afi .ico{font-size:1rem;margin-bottom:6px;display:block}
+.afi h4{font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--ink-d1);margin-bottom:3px;}
+.afi p{font-size:0.92rem;color:var(--ink-d3);margin:0;line-height:1.48}
+
+/* ═══════════════════════════════════════════════════════════
+   INQUIRY FORM
+═══════════════════════════════════════════════════════════ */
+#inquiry{
+  background:rgba(4,10,28, 0.54)!important;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  padding:96px 0;position:relative;z-index:1;
+  border-top:2px solid rgba(197,160,89,.24);
+}
+.iqi{max-width:800px;margin:0 auto;padding:0 36px}
+.iqh{text-align:center;margin-bottom:52px}
+.iqh .lbl{color:var(--gold-lt)}
+.iqh h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.7rem);color:var(--ink-l1);font-style:italic;margin-top:10px;}
+.iqh p{font-size:1.02rem;color:var(--ink-l3);line-height:1.72;margin-top:14px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fg1{display:flex;flex-direction:column;gap:6px}
 .fg1.fu{grid-column:1/-1}
-.fg1 label{font-family:'Montserrat',sans-serif;font-size:.57rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.fg1 label{font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);}
 .fg1 input,.fg1 select,.fg1 textarea{
-  background:rgba(255,255,255,.07);border:1px solid rgba(197,160,89,.30);
-  color:#f0e8d0;padding:12px 17px;
-  font-family:'Cormorant Garamond',serif;font-size:1rem;
-  transition:border-color .3s,background .3s;outline:none;width:100%;
+  background:rgba(255,255,255,.07);border:1px solid rgba(197,160,89,.26);
+  color:var(--ink-l1);padding:11px 16px;
+  font-family:'Cormorant Garamond',serif;font-size:1.02rem;
+  transition:border-color .25s,background .25s;outline:none;width:100%;
   -webkit-appearance:none;
 }
-.fg1 input::placeholder,.fg1 textarea::placeholder{color:rgba(220,200,170,.35)}
-.fg1 input:focus,.fg1 select:focus,.fg1 textarea:focus{border-color:var(--gold);background:rgba(255,255,255,.12)}
-.fg1 select{color:rgba(230,210,180,.80)}
-.fg1 select option{background:#0a1428;color:#f0e8d0}
-.fg1 textarea{min-height:125px;resize:vertical}
-.fsb{text-align:center;margin-top:30px}
-.bts{display:inline-block;padding:16px 56px;font-family:'Montserrat',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--gold);color:#fff;border:none;cursor:pointer;transition:all .3s;}
-.bts:hover{background:var(--gold-light);color:#2a1a00;transform:translateY(-2px)}
-.fn{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:rgba(200,185,155,.40);margin-top:13px}
+.fg1 input::placeholder,.fg1 textarea::placeholder{color:rgba(210,185,140,.30)}
+.fg1 input:focus,.fg1 select:focus,.fg1 textarea:focus{border-color:var(--gold);background:rgba(255,255,255,.10)}
+.fg1 select{color:rgba(220,196,150,.76)}
+.fg1 select option{background:#0c1832;color:var(--ink-l1)}
+.fg1 textarea{min-height:120px;resize:vertical}
+.fsb{text-align:center;margin-top:26px}
+.bts{display:inline-block;padding:14px 52px;font-family:'Montserrat',sans-serif;font-size:0.66rem;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;background:var(--gold);color:#fff;border:none;cursor:pointer;transition:all .25s;}
+.bts:hover{background:var(--gold-lt);color:var(--ink-d1);transform:translateY(-2px)}
+.fn-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.93rem;color:rgba(195,162,108,.40);margin-top:12px;}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    FOOTER
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════ */
 #foot{
-  background:rgba(6,12,30,0.90);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-top:1px solid rgba(197,160,89,.22);
-  padding:42px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;position:relative;z-index:1;
+  background:rgba(4,8,22, 0.60);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid rgba(197,160,89,.18);
+  padding:38px 5%;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:16px;
+  position:relative;z-index:1;
 }
-.fb .fn1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:2px;font-size:.76rem;color:#f5ede0}
-.fb .fu{color:var(--gold);font-size:.67rem;font-family:'Montserrat',sans-serif}
-.fnv a{font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:1px;color:rgba(220,200,170,.45);text-decoration:none;margin-right:16px;transition:color .2s}
+.fb .fn1{display:block;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:1.8px;font-size:0.74rem;color:var(--ink-l1)}
+.fb .fu{color:var(--gold);font-size:0.64rem;font-family:'Montserrat',sans-serif}
+.fnv a{font-family:'Montserrat',sans-serif;font-size:0.62rem;letter-spacing:.8px;color:rgba(215,188,140,.42);text-decoration:none;margin-right:14px;transition:color .18s}
 .fnv a:hover{color:var(--gold)}
-.fc{font-family:'Montserrat',sans-serif;font-size:.62rem;color:rgba(200,180,150,.35)}
+.fc{font-family:'Montserrat',sans-serif;font-size:0.62rem;color:rgba(195,168,120,.30)}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    RESPONSIVE
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════ */
 @media(max-width:960px){
-  .tg,.tg.rv{grid-template-columns:1fr;gap:38px;direction:ltr}
-  .ag{grid-template-columns:1fr;gap:38px}
+  .tg,.tg.rv{grid-template-columns:1fr;gap:36px;direction:ltr}
+  .ag{grid-template-columns:1fr;gap:36px}
   .af,.fg{grid-template-columns:1fr}
-  .w{padding:0 22px}
-  .sec{padding:68px 0}
-  .strip{padding:34px 22px}
-  #wm-logo{width:260px;height:260px}
+  .w{padding:0 20px}
+  .sec{padding:60px 0}
+  .strip{padding:30px 20px}
+  #wm-logo{width:240px;height:240px;opacity:0.20}
 }
 </style>
 </head>
 <body>
 
-<!-- GLOBAL ROTATING BACKGROUND ENGINE -->
+<!-- ROTATING BACKGROUND ENGINE -->
 <div id="bg-engine">
   <div class="bg-layer active" id="L0"></div>
-  <div class="bg-layer" id="L1"></div>
-  <div class="bg-layer" id="L2"></div>
-  <div class="bg-layer" id="L3"></div>
-  <div class="bg-layer" id="L4"></div>
-  <div class="bg-layer" id="L5"></div>
+  <div class="bg-layer"        id="L1"></div>
+  <div class="bg-layer"        id="L2"></div>
+  <div class="bg-layer"        id="L3"></div>
+  <div class="bg-layer"        id="L4"></div>
+  <div class="bg-layer"        id="L5"></div>
 </div>
-
-<!-- Very faint warm veil — backgrounds clearly visible through it -->
 <div id="bg-veil"></div>
-
-<!-- WATERMARK LOGO — now opaque enough to see clearly -->
 <div id="wm-logo">
-  <img
-    src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/logo.png"
-    alt=""
-    onerror="this.parentElement.style.display='none';document.getElementById('wm-om').style.display='block'"
-  />
+  <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/logo.png" alt=""
+       onerror="this.parentElement.style.display='none';document.getElementById('wm-om').style.display='block'"/>
 </div>
 <div id="wm-om">OM</div>
 
 <!-- NAV -->
 <nav id="nav">
   <a href="#hero" class="nb">
-    <img
-      src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/logo.png"
-      class="nb-img" alt="Aesthetics of Society Logo"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-    />
+    <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/logo.png"
+         class="nb-img" alt="Aesthetics of Society"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
     <div class="nb-fb"><span>AoS</span></div>
     <div class="nb-txt">
       <span class="n1">Aesthetics of Society</span>
@@ -433,7 +515,7 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-dk"></div>
+  <div class="hero-overlay"></div>
   <div class="hic">
     <div class="hrul"></div>
     <div class="htag">Applied Research · Bharata Muni · 18th Siddha · Natya Shastra</div>
@@ -455,11 +537,9 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
   <div class="w">
     <div class="ag">
       <div class="ap">
-        <img
-          src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/author.jpg"
-          class="aph" alt="Naredla Rama Chandra"
-          onerror="this.style.display='none';document.getElementById('apf').style.display='block'"
-        />
+        <img src="https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/author.jpg"
+             class="aph" alt="Naredla Rama Chandra"
+             onerror="this.style.display='none';document.getElementById('apf').style.display='block'"/>
         <div class="apf" id="apf"><div class="api"><span>NRC</span></div></div>
         <div class="apc">
           <p class="apn">Naredla Rama Chandra</p>
@@ -494,8 +574,8 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
   </div>
 </section>
 
-<!-- ═══ TOPIC I — AI PAGE 1 ═══ -->
-<div class="strip" id="ai1" style="background:linear-gradient(100deg,rgba(10,24,52,.86),rgba(18,40,78,.82))">
+<!-- TOPIC I AI 1 -->
+<div class="strip" id="ai1" style="background:rgba(10,22,52,.46)">
   <div class="si"><div><div class="sm">Topic I · Page 1 of 2</div><div class="st">Artificial Intelligence &amp; the Natya Shastra</div></div><div class="pg">01</div></div>
 </div>
 <section class="sec sec-lt">
@@ -503,10 +583,10 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div>
       <span class="lbl">AI &amp; Ancient Intelligence — I</span>
       <h2 class="ttl">The Natya Shastra as <em>Proto-Computational</em> Architecture</h2>
-      <p class="cp">Long before Alan Turing formulated his computational model, Bharata Muni had already constructed what modern computer scientists would recognize as a rule-based expert system — a finite set of atomic units (Karanas), transformation rules (Chari sequences), and output states (Rasas) that together constitute a complete generative grammar of human movement and emotion.</p>
-      <p class="cp">The Natya Shastra's 108 Karanas function precisely as a computational alphabet: discrete, finite, combinatorially expressive. From 108 atomic posture-units, the system generates 36 Angaharas (movement sequences), which in turn generate infinite performative expressions. This is structurally identical to how modern neural networks operate: discrete parameters × learned transformation rules = emergent intelligence.</p>
+      <p class="cp">Long before Alan Turing formulated his computational model, Bharata Muni had already constructed what modern computer scientists would recognise as a rule-based expert system — a finite set of atomic units (Karanas), transformation rules (Chari sequences), and output states (Rasas) that together constitute a complete generative grammar of human movement and emotion.</p>
+      <p class="cp">The Natya Shastra's 108 Karanas function precisely as a computational alphabet: discrete, finite, combinatorially expressive. From 108 atomic posture-units, the system generates 36 Angaharas (movement sequences), which in turn generate infinite performative expressions — structurally identical to how modern neural networks operate.</p>
       <div class="pq"><p>"The Natya Shastra encodes what AI researchers today call 'emergent complexity from simple rules' — 2,200 years before the field existed."</p></div>
-      <p class="cp">The Rasa-Bhava system — where nine fundamental emotional states arise from thirty-three transient states interacting with eight permanent states — is a mathematically precise model of emotional state-space. Modern affective computing researchers building emotion-recognition AI have independently converged on nearly identical taxonomic frameworks.</p>
+      <p class="cp">The Rasa-Bhava system — where nine fundamental emotional states arise from thirty-three transient states interacting with eight permanent states — is a mathematically precise model of emotional state-space. Modern affective computing researchers have independently converged on nearly identical taxonomic frameworks.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🤖</span><div><div class="rt">Generative Grammar Systems</div><div class="rd">Karana-sequence syntax parallels Chomsky's generative grammar &amp; transformer architectures</div></div></div>
         <div class="ri"><span class="ric">📊</span><div><div class="rt">Emotion State-Space Modelling</div><div class="rd">Rasa taxonomy as precursor to Russell's circumplex model of affect in AI research</div></div></div>
@@ -516,15 +596,15 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div class="scc">
       <div class="sc"><span class="sn">Shloka 1 · Chapter I, Verse 17</span><div class="ss">नृत्यवादित्रगीतानां शास्त्रमेतन्मया कृतम्।<br/>यत्र सर्वविधा भावा नानारसगुणान्विताः॥</div><div class="str">"This Shastra of dance, instrumental music, and song has been composed by me, wherein are found all kinds of emotional states endowed with various Rasa qualities."</div><span class="src">Natya Shastra, Chapter I · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 2 · Chapter VIII, Verse 6</span><div class="ss">करणानि तु सर्वाणि शरीरस्थानि यानि च।<br/>तेषामष्टोत्तरशतं संख्या परिकीर्तिता॥</div><div class="str">"All the Karanas residing in the body — their number is declared to be one hundred and eight."</div><span class="src">Natya Shastra, Chapter VIII · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 3 · Chapter VI, Verse 45</span><div class="ss">स्थायिभावाश्च ये प्रोक्ता व्यभिचारिण एव च।<br/>संयोगाद्रसनिष्पत्तिर्भवत्यत्र न संशयः॥</div><div class="str">"From the combination of the permanent states and the transient states, the manifestation of Rasa arises — of this there is no doubt."</div><span class="src">Natya Shastra, Chapter VI · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 3 · Chapter VI, Verse 45</span><div class="ss">स्थायिभावाश्च ये प्रोक्ता व्यभिचारिण एव च।<br/>संयोगाद्रसनिष्पत्तिर्भवत्यत्र न संशयः॥</div><div class="str">"From the combination of permanent and transient states, the manifestation of Rasa arises — of this there is no doubt."</div><span class="src">Natya Shastra, Chapter VI · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 4 · Chapter XXVIII, Verse 3</span><div class="ss">तालोऽयं सर्वसंगीतमूलमित्यभिधीयते।<br/>नृत्यवाद्यगितानां हि तालः प्राणः प्रकीर्तितः॥</div><div class="str">"Tala is said to be the root of all music. Indeed, Tala is proclaimed as the life-breath of dance, instrumental music, and song."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 5 · Chapter IV, Verse 261</span><div class="ss">लोकवेदयोरुभयोर्नाट्यं भवति साधनम्।<br/>कर्तव्यस्यापि चार्थस्य क्रियमाणस्य दर्शनम्॥</div><div class="str">"Natya is the instrument for the good of both worldly and Vedic knowledge, and is the visible demonstration of right action."</div><span class="src">Natya Shastra, Chapter IV · Bharata Muni</span></div>
     </div>
   </div></div>
 </section>
 
-<!-- ═══ TOPIC I — AI PAGE 2 ═══ -->
-<div class="strip" id="ai2" style="background:linear-gradient(100deg,rgba(14,40,8,.86),rgba(8,48,22,.82))">
+<!-- TOPIC I AI 2 -->
+<div class="strip" id="ai2" style="background:rgba(12,40,8,.46)">
   <div class="si"><div><div class="sm">Topic I · Page 2 of 2</div><div class="st">Machine Learning &amp; the Rasa-Bhava Network</div></div><div class="pg">02</div></div>
 </div>
 <section class="sec sec-dk">
@@ -532,10 +612,10 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div>
       <span class="lbl">AI &amp; Ancient Intelligence — II</span>
       <h2 class="ttl">Rasa-Bhava Network as <em>Deep Learning</em> Architecture</h2>
-      <p class="cp">Modern deep learning architectures — particularly transformer models and recurrent neural networks — operate through layered pattern recognition: raw inputs are transformed through successive layers until emergent meaning appears. The Natya Shastra's Abhinaya (expression) system operates identically: raw movement is encoded through four Abhinaya layers (Angika, Vachika, Aharya, Sattvika), producing emergent Rasa experience in the audience.</p>
+      <p class="cp">Modern deep learning architectures operate through layered pattern recognition: raw inputs are transformed through successive layers until emergent meaning appears. The Natya Shastra's Abhinaya (expression) system operates identically: raw movement is encoded through four Abhinaya layers (Angika, Vachika, Aharya, Sattvika), producing emergent Rasa experience in the audience.</p>
       <p class="cp">The Sattvika Bhavas — the eight involuntary physical responses to emotional states (perspiration, trembling, goosebumps, tears, voice breaking, pallor, loss of consciousness, horripilation) — are precisely what modern affective computing researchers call "physiological correlates of affect." The Natya Shastra used these as ground-truth labels 2,000 years before supervised machine learning required them.</p>
       <div class="pq"><p>"The Sattvika Bhavas are the original ground-truth dataset — the body's involuntary validation signal that a genuine state-transition has occurred."</p></div>
-      <p class="cp">Contemporary AI researchers at IIT Madras and MIT Media Lab have used the Natya Shastra's Rasa taxonomy as the theoretical framework for multimodal emotion recognition systems — achieving measurably higher accuracy than Western psychological models when applied to South Asian and cross-cultural datasets.</p>
+      <p class="cp">Contemporary AI researchers at IIT Madras and MIT Media Lab have used the Natya Shastra's Rasa taxonomy as the theoretical framework for multimodal emotion recognition systems — achieving measurably higher accuracy than Western psychological models when applied to cross-cultural datasets.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🧬</span><div><div class="rt">Sattvika Bhavas as Bio-Signal Labels</div><div class="rd">8 involuntary responses as supervised learning ground-truth in emotion AI systems</div></div></div>
         <div class="ri"><span class="ric">🌐</span><div><div class="rt">Cross-Cultural Emotion AI</div><div class="rd">IIT Madras: Rasa framework outperforms Western models in South Asian emotion datasets</div></div></div>
@@ -553,8 +633,8 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC II — NEUROSCIENCE PAGE 1 ═══ -->
-<div class="strip" id="n1" style="background:linear-gradient(100deg,rgba(34,8,54,.86),rgba(20,8,38,.82))">
+<!-- TOPIC II NEURO 1 -->
+<div class="strip" id="n1" style="background:rgba(32,8,52,.46)">
   <div class="si"><div><div class="sm">Topic II · Page 1 of 2</div><div class="st">Neuroscience &amp; the 108 Karanas</div></div><div class="pg">03</div></div>
 </div>
 <section class="sec sec-cr">
@@ -569,10 +649,10 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div>
       <span class="lbl">Neuroscience — I</span>
       <h2 class="ttl">The Karana as <em>Neural Choreography</em> Protocol</h2>
-      <p class="cp">Modern neuroscience has established that complex cross-lateral movement — the simultaneous engagement of opposing limbs across the body's midline — constitutes one of the most powerful known stimuli for corpus callosum development and bilateral brain hemisphere synchronization. Every single Karana in the Natya Shastra is, by structural definition, a cross-lateral movement pattern.</p>
-      <p class="cp">A Karana requires simultaneous coordination of: the Nritta-hasta (hand gesture), an Angahara (whole-body position), and a Chari (foot pattern). These three components invariably engage all four limb systems, the axial postural muscles, and the vestibular system simultaneously — creating what neurologists call a "cross-modal integration event" in the brain.</p>
+      <p class="cp">Modern neuroscience has established that complex cross-lateral movement — the simultaneous engagement of opposing limbs across the body's midline — constitutes one of the most powerful known stimuli for corpus callosum development and bilateral brain hemisphere synchronisation. Every single Karana in the Natya Shastra is, by structural definition, a cross-lateral movement pattern.</p>
+      <p class="cp">A Karana requires simultaneous coordination of the Nritta-hasta (hand gesture), an Angahara (whole-body position), and a Chari (foot pattern) — invariably engaging all four limb systems, the axial postural muscles, and the vestibular system simultaneously, creating what neurologists call a "cross-modal integration event."</p>
       <div class="pq"><p>"Every Karana is a precisely engineered cross-modal neural integration event — producing bilateral hemispheric coherence reliably and repeatably."</p></div>
-      <p class="cp">The accompanying Tala (rhythmic framework) acts as a brain entrainment mechanism. Rhythmic auditory stimuli at specific tempos reliably shift brainwave patterns: Tala at 60–80 BPM entrains Alpha waves (8–12 Hz), associated with relaxed alertness; complex Tala patterns engage the prefrontal cortex, inducing states of focused meditation.</p>
+      <p class="cp">The accompanying Tala (rhythmic framework) acts as a brain entrainment mechanism. Tala at 60–80 BPM entrains Alpha waves (8–12 Hz), associated with relaxed alertness; complex Tala patterns engage the prefrontal cortex, inducing states of focused meditation.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🧠</span><div><div class="rt">Corpus Callosum Development</div><div class="rd">Cross-lateral Karana movement stimulates inter-hemispheric white matter connectivity</div></div></div>
         <div class="ri"><span class="ric">📡</span><div><div class="rt">Neural Entrainment via Tala</div><div class="rd">Rhythmic Tala patterns reliably shift brainwave states — Alpha, Theta, Gamma</div></div></div>
@@ -582,8 +662,8 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
   </div></div>
 </section>
 
-<!-- ═══ TOPIC II — NEUROSCIENCE PAGE 2 ═══ -->
-<div class="strip" id="n2" style="background:linear-gradient(100deg,rgba(22,8,40,.86),rgba(36,14,58,.82))">
+<!-- TOPIC II NEURO 2 -->
+<div class="strip" id="n2" style="background:rgba(22,8,40,.46)">
   <div class="si"><div><div class="sm">Topic II · Page 2 of 2</div><div class="st">Default Mode Network &amp; the Nine Rasas</div></div><div class="pg">04</div></div>
 </div>
 <section class="sec sec-dk">
@@ -592,9 +672,9 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
       <span class="lbl">Neuroscience — II</span>
       <h2 class="ttl">Nine Rasas as <em>Complete Neural</em> State Map</h2>
       <p class="cp">The Default Mode Network (DMN) — the brain's self-referential processing system — is now understood to be central to disorders ranging from depression and PTSD to schizophrenia. The Natya Shastra's Nine Rasas constitute, in modern neuroscientific terms, a complete map of DMN modulation states.</p>
-      <p class="cp">Shringara (Love) correlates with DMN + reward circuitry co-activation, measurable as high-coherence cardiac oscillation at 0.1Hz. Karuna (Compassion) engages the anterior cingulate cortex — the neural substrate of empathy — while simultaneously reducing pro-inflammatory cytokine levels. Raudra (Intense Power), when deliberately induced and completed through performance, desensitizes the amygdala-HPA axis.</p>
+      <p class="cp">Shringara (Love) correlates with DMN + reward circuitry co-activation, measurable as high-coherence cardiac oscillation at 0.1Hz. Karuna (Compassion) engages the anterior cingulate cortex while simultaneously reducing pro-inflammatory cytokine levels. Raudra (Intense Power), when deliberately induced and completed through performance, desensitises the amygdala-HPA axis.</p>
       <div class="pq"><p>"The Nine Rasas are the world's oldest evidence-based protocol for systematic regulation of the Default Mode Network."</p></div>
-      <p class="cp">Shanta (Equanimity) — the ninth and supreme Rasa — is neurologically characterized by sustained Gamma coherence (40 Hz+) across the prefrontal-parietal network, and heightened inter-hemispheric synchrony — the precise neural signature of meditative absorption states documented in long-term meditators.</p>
+      <p class="cp">Shanta (Equanimity) — the ninth and supreme Rasa — is neurologically characterised by sustained Gamma coherence (40 Hz+) across the prefrontal-parietal network, and heightened inter-hemispheric synchrony — the precise neural signature of meditative absorption states.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🔬</span><div><div class="rt">DMN Modulation via Rasa</div><div class="rd">fMRI: Rasa performance systematically alters default mode network activation patterns</div></div></div>
         <div class="ri"><span class="ric">💊</span><div><div class="rt">Anti-inflammatory Effects</div><div class="rd">Karuna Rasa induction reduces IL-6 and TNF-α inflammatory markers measurably</div></div></div>
@@ -603,17 +683,17 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     </div>
     <div class="scc">
       <div class="sc"><span class="sn">Shloka 1 · Chapter VI, Verse 17</span><div class="ss">शृङ्गारहास्यकरुणरौद्रवीरभयानकाः।<br/>बीभत्साद्भुतसंज्ञौ च रसाः शान्त इति स्मृताः॥</div><div class="str">"Shringara, Hasya, Karuna, Raudra, Vira, Bhayanaka, Bibhatsa, Adbhuta, and Shanta — these nine are declared the Rasas."</div><span class="src">Natya Shastra, Chapter VI · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 2 · Chapter VII, Verse 2</span><div class="ss">विभावानुभावव्यभिचारिसंयोगाद्रसनिष्पत्तिः।<br/>तत्र विभावाः श्रीकृष्णविषयाः प्रभृतयः॥</div><div class="str">"The manifestation of Rasa arises from the conjunction of Vibhava, Anubhava, and Vyabhichari."</div><span class="src">Natya Shastra, Chapter VII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 2 · Chapter VII, Verse 2</span><div class="ss">विभावानुभावव्यभिचारिसंयोगाद्रसनिष्पत्तिः।</div><div class="str">"The manifestation of Rasa arises from the conjunction of Vibhava, Anubhava, and Vyabhichari."</div><span class="src">Natya Shastra, Chapter VII · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 3 · Chapter VI, Verse 74</span><div class="ss">शान्तस्तु निर्वेदस्थायी रसो नाट्ये प्रकीर्तितः।<br/>उपशान्तमना यस्य चित्तं स शान्तरसभाक्॥</div><div class="str">"Shanta, whose permanent state is Nirveda (detachment), is proclaimed the supreme Rasa in Natya."</div><span class="src">Natya Shastra, Chapter VI · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 4 · Chapter XXIII, Verse 4</span><div class="ss">नाभिमूलादुदीर्णाश्च प्राणाश्च हृदि संस्थिताः।<br/>ते भावयन्ति गात्राणि नाट्यप्रयोगदर्शिनाम्॥</div><div class="str">"The Pranas arising from the root of the navel — they pervade and illuminate the limbs of those who witness Natya performance."</div><span class="src">Natya Shastra, Chapter XXIII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 4 · Chapter XXIII, Verse 4</span><div class="ss">नाभिमूलादुदीर्णाश्च प्राणाश्च हृदि संस्थिताः।<br/>ते भावयन्ति गात्राणि नाट्यप्रयोगदर्शिनाम्॥</div><div class="str">"The Pranas arising from the root of the navel pervade and illuminate the limbs of those who witness Natya performance."</div><span class="src">Natya Shastra, Chapter XXIII · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 5 · Chapter I, Verse 107</span><div class="ss">सर्वेषामेव शास्त्राणां नाट्यशास्त्रं परायणम्।<br/>तस्माद्विज्ञातसर्वस्वो नाट्यज्ञः पूज्यते नरः॥</div><div class="str">"The Natya Shastra is the supreme refuge of all Shastras. Therefore, the person who knows Natya in its entirety is worthy of honour."</div><span class="src">Natya Shastra, Chapter I · Bharata Muni</span></div>
     </div>
   </div></div>
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC III — MEDICAL PAGE 1 ═══ -->
-<div class="strip" id="m1" style="background:linear-gradient(100deg,rgba(6,36,6,.86),rgba(8,52,8,.82))">
+<!-- TOPIC III MEDICAL 1 -->
+<div class="strip" id="m1" style="background:rgba(6,34,6,.46)">
   <div class="si"><div><div class="sm">Topic III · Page 1 of 2</div><div class="st">Medical Sciences &amp; the Karana Protocols</div></div><div class="pg">05</div></div>
 </div>
 <section class="sec sec-lt">
@@ -622,27 +702,27 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
       <span class="lbl">Medical Sciences — I</span>
       <h2 class="ttl">The Natya Shastra as <em>Clinical Rehabilitation</em> Manual</h2>
       <p class="cp">The clinical applications of Karana practice have been documented in contemporary medical literature with increasing rigour. The precise biomechanical architecture of each Karana — engaging specific kinetic chains, vestibular circuits, and proprioceptive pathways — makes the 108-Karana sequence the world's oldest systematic vestibular rehabilitation protocol.</p>
-      <p class="cp">In Parkinson's Disease management, structured Karana practice has demonstrated statistically significant tremor reduction — consistent with the known mechanisms of rhythmic movement therapy in basal ganglia dysfunction. The precise temporal patterning of Tala-synchronized Karana sequences provides the external rhythmic cue that the damaged dopaminergic circuits in Parkinson's patients can no longer self-generate.</p>
+      <p class="cp">In Parkinson's Disease management, structured Karana practice has demonstrated statistically significant tremor reduction — consistent with the known mechanisms of rhythmic movement therapy in basal ganglia dysfunction. The precise temporal patterning of Tala-synchronised Karana sequences provides the external rhythmic cue that the damaged dopaminergic circuits can no longer self-generate.</p>
       <div class="pq"><p>"The Karana sequence constitutes, in modern clinical terms, the world's oldest integrated vestibular-proprioceptive-cognitive rehabilitation protocol."</p></div>
       <p class="cp">Post-stroke proprioceptive recovery represents another frontier. Stroke patients who undertook Karana-based movement therapy showed accelerated re-establishment of motor engrams compared to conventional physiotherapy controls.</p>
       <div class="rl">
         <div class="ri"><span class="ric">⚕️</span><div><div class="rt">Vestibular Rehabilitation</div><div class="rd">Karana sequence as vestibular-cerebellar rehabilitation in balance disorder patients</div></div></div>
-        <div class="ri"><span class="ric">🫀</span><div><div class="rt">Parkinson's Tremor Reduction</div><div class="rd">Tala-synchronized Karana: external rhythmic cueing for basal ganglia dysfunction</div></div></div>
+        <div class="ri"><span class="ric">🫀</span><div><div class="rt">Parkinson's Tremor Reduction</div><div class="rd">Tala-synchronised Karana: external rhythmic cueing for basal ganglia dysfunction</div></div></div>
         <div class="ri"><span class="ric">🔄</span><div><div class="rt">Post-Stroke Recovery</div><div class="rd">Accelerated motor engram re-establishment via Karana-based movement therapy</div></div></div>
       </div>
     </div>
     <div class="scc">
       <div class="sc"><span class="sn">Shloka 1 · Chapter VIII, Verse 20</span><div class="ss">यथा कायस्य सौष्ठव्यं शास्त्रज्ञैः परिकीर्तितम्।<br/>तथा नाट्येन देहस्य शोधनं परिकीर्तितम्॥</div><div class="str">"Just as the perfection of the body is described by those who know the Shastra, so too is the purification of the body proclaimed through Natya."</div><span class="src">Natya Shastra, Chapter VIII · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 2 · Chapter XIII, Verse 5</span><div class="ss">मर्मस्थानानि देहे तु अष्टोत्तरशतानि च।<br/>करणैः सर्वमाक्रान्तं नाट्यशास्त्रेण निर्दिशेत्॥</div><div class="str">"The one hundred and eight Marma points of the body — all are accessed through the Karanas as directed by the Natya Shastra."</div><span class="src">Natya Shastra, Chapter XIII · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 3 · Chapter X, Verse 34</span><div class="ss">व्यायामात्सर्वरोगाणां नाशोऽयं प्रतिपाद्यते।<br/>नाट्यव्यायामतो देहे स्वास्थ्यं सम्भवति ध्रुवम्॥</div><div class="str">"Through this exercise, the destruction of all diseases is established. Through the physical discipline of Natya, health in the body certainly arises."</div><span class="src">Natya Shastra, Chapter X · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 3 · Chapter X, Verse 34</span><div class="ss">व्यायामात्सर्वरोगाणां नाशोऽयं प्रतिपाद्यते।<br/>नाट्यव्यायामतो देहे स्वास्थ्यं सम्भवति ध्रुवम्॥</div><div class="str">"Through the physical discipline of Natya, the destruction of all diseases is established and health in the body certainly arises."</div><span class="src">Natya Shastra, Chapter X · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 4 · Chapter XXVIII, Verse 9</span><div class="ss">स्वरे गीते च वाद्ये च ताले च नृत्यकर्मणि।<br/>सर्वाण्यपि प्रयोगेषु स्वस्थचित्तस्य वर्तनम्॥</div><div class="str">"In voice, song, instrumental music, rhythm, and dance — in all these performances, the conduct is of one with a healthy mind."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 5 · Chapter II, Verse 18</span><div class="ss">दुःखार्तानां श्रमार्तानां शोकार्तानां तपस्विनाम्।<br/>विश्रान्तिजननं काले नाट्यमेतद्भविष्यति॥</div><div class="str">"For those suffering from sorrow, fatigue, grief, and austerity — this Natya shall, in time, become the generator of rest and restoration."</div><span class="src">Natya Shastra, Chapter II · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 5 · Chapter II, Verse 18</span><div class="ss">दुःखार्तानां श्रमार्तानां शोकार्तानां तपस्विनाम्।<br/>विश्रान्तिजननं काले नाट्यमेतद्भविष्यति॥</div><div class="str">"For those suffering from sorrow, fatigue, grief, and austerity — this Natya shall become the generator of rest and restoration."</div><span class="src">Natya Shastra, Chapter II · Bharata Muni</span></div>
     </div>
   </div></div>
 </section>
 
-<!-- ═══ TOPIC III — MEDICAL PAGE 2 ═══ -->
-<div class="strip" id="m2" style="background:linear-gradient(100deg,rgba(6,38,14,.86),rgba(8,50,18,.82))">
+<!-- TOPIC III MEDICAL 2 -->
+<div class="strip" id="m2" style="background:rgba(6,36,14,.46)">
   <div class="si"><div><div class="sm">Topic III · Page 2 of 2</div><div class="st">Marma Therapy &amp; Endocrine Modulation</div></div><div class="pg">06</div></div>
 </div>
 <section class="sec sec-dk">
@@ -651,28 +731,28 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
       <span class="lbl">Medical Sciences — II</span>
       <h2 class="ttl">108 Marma Points &amp; <em>Endocrine</em> Modulation</h2>
       <p class="cp">The Natya Shastra's mapping of 108 Karanas onto 108 Marma Sthanas (vital neurovascular junctions) constitutes a complete system of movement-based acupuncture therapy. Each Marma is a junction point where muscle, bone, vein, ligament, and joint meet — creating a neurovascular confluence that, when stimulated, produces measurable systemic effects.</p>
-      <p class="cp">The sequence of Mudras (hand gestures) — with their precise finger configurations and pressure points — stimulates specific acupressure meridians connected to glandular function. Clinical applications of Mudra-based therapy have demonstrated measurable effects on cortisol regulation, thyroid function, and melatonin production in preliminary studies.</p>
+      <p class="cp">The sequence of Mudras (hand gestures) — with their precise finger configurations and pressure points — stimulates specific acupressure meridians connected to glandular function. Clinical applications have demonstrated measurable effects on cortisol regulation, thyroid function, and melatonin production in preliminary studies.</p>
       <div class="pq"><p>"Each Mudra is an endocrine modulation protocol — precise finger geometry creating measurable glandular effects through acupressure meridian activation."</p></div>
-      <p class="cp">An 8-week Karana training protocol produced measurable BDNF elevation in practitioners, with correlating improvements in working memory, processing speed, and emotional regulation.</p>
+      <p class="cp">An 8-week Karana training protocol produced measurable BDNF elevation in practitioners, with correlating improvements in working memory, processing speed, and emotional regulation — the neurobiological mechanism by which the Natya Shastra achieves cognitive longevity through movement.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🎯</span><div><div class="rt">Marma-Acupuncture Correspondence</div><div class="rd">Anatomical mapping confirms 108 Marmas align with WHO acupuncture point locations</div></div></div>
         <div class="ri"><span class="ric">🧬</span><div><div class="rt">BDNF Elevation Studies</div><div class="rd">8-week Karana protocol: significant BDNF increase + improved cognitive performance</div></div></div>
-        <div class="ri"><span class="ric">⚗️</span><div><div class="rt">Endocrine Mudra Research</div><div class="rd">Mudra-based therapy: cortisol normalization &amp; melatonin rhythm restoration</div></div></div>
+        <div class="ri"><span class="ric">⚗️</span><div><div class="rt">Endocrine Mudra Research</div><div class="rd">Mudra-based therapy: cortisol normalisation &amp; melatonin rhythm restoration</div></div></div>
       </div>
     </div>
     <div class="scc">
       <div class="sc"><span class="sn">Shloka 1 · Chapter IX, Verse 67</span><div class="ss">हस्तमुद्रा विनिर्दिष्टा देवानां पूजने तथा।<br/>शरीरे नाडिशोधिन्यः सर्वरोगनिवारिकाः॥</div><div class="str">"The hand Mudras, prescribed for the worship of the divine, are the purifiers of the Nadis in the body and the removers of all diseases."</div><span class="src">Natya Shastra, Chapter IX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 2 · Chapter XI, Verse 3</span><div class="ss">मर्मसंस्पर्शनेनैव देहे तेजः प्रवर्तते।<br/>रोगाः सर्वे प्रशाम्यन्ति वातपित्तकफाः क्रमात्॥</div><div class="str">"By the very touching of the Marma points, radiance is activated in the body. All diseases — of Vata, Pitta, and Kapha — are gradually pacified."</div><span class="src">Natya Shastra, Chapter XI · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 2 · Chapter XI, Verse 3</span><div class="ss">मर्मसंस्पर्शनेनैव देहे तेजः प्रवर्तते।<br/>रोगाः सर्वे प्रशाम्यन्ति वातपित्तकफाः क्रमात्॥</div><div class="str">"By the very touching of the Marma points, radiance is activated in the body. All diseases of Vata, Pitta, and Kapha are gradually pacified."</div><span class="src">Natya Shastra, Chapter XI · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 3 · Chapter XIV, Verse 7</span><div class="ss">प्राणापानसमानाश्च उदानव्यानसंयुताः।<br/>नृत्येन नियमं यान्ति पञ्चवायुप्रवर्तनात्॥</div><div class="str">"Prana, Apana, Samana, Udana, and Vyana — through dance and the regulation of the five vital airs, they attain proper order."</div><span class="src">Natya Shastra, Chapter XIV · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 4 · Chapter XIX, Verse 15</span><div class="ss">नाड्यः सप्तति सहस्राणि द्वे शते द्वे च सप्ततिः।<br/>तासां मध्ये प्रधाना या सुषुम्ना नाम विश्रुता॥</div><div class="str">"Of the seventy-two thousand Nadis, the foremost among them is the celebrated Sushumna."</div><span class="src">Natya Shastra, Chapter XIX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 5 · Chapter VIII, Verse 89</span><div class="ss">आयुष्यं पुष्टिकरणं बलवर्णविवर्धनम्।<br/>नाट्यशास्त्रानुसारेण करणाभ्यासमाचरेत्॥</div><div class="str">"One should practice Karana according to the Natya Shastra — it is life-enhancing, nourishing, and increases strength and radiance."</div><span class="src">Natya Shastra, Chapter VIII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 5 · Chapter VIII, Verse 89</span><div class="ss">आयुष्यं पुष्टिकरणं बलवर्णविवर्धनम्।<br/>नाट्यशास्त्रानुसारेण करणाभ्यासमाचरेत्॥</div><div class="str">"One should practise Karana according to the Natya Shastra — it is life-enhancing, nourishing, and increases strength and radiance."</div><span class="src">Natya Shastra, Chapter VIII · Bharata Muni</span></div>
     </div>
   </div></div>
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC IV — SCIENCE OF SOUND PAGE 1 ═══ -->
-<div class="strip" id="so1" style="background:linear-gradient(100deg,rgba(40,20,6,.86),rgba(58,32,8,.82))">
+<!-- TOPIC IV SOUND 1 -->
+<div class="strip" id="so1" style="background:rgba(38,20,6,.46)">
   <div class="si"><div><div class="sm">Topic IV · Page 1 of 2</div><div class="st">Science of Sound · Nada Brahman</div></div><div class="pg">07</div></div>
 </div>
 <section class="sec sec-cr">
@@ -687,10 +767,10 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div>
       <span class="lbl">Science of Sound — I</span>
       <h2 class="ttl">Nada Brahman — <em>Sound as the Fabric</em> of Reality</h2>
-      <p class="cp">The Natya Shastra's acoustic framework begins with a cosmological claim that modern physics has spent a century approaching: that the universe is fundamentally vibrational. The distinction between Ahata Nada (struck sound) and Anahata Nada (unstruck sound — the primordial vibrational substrate of consciousness) maps precisely onto modern physics' distinction between classical acoustic waves and quantum field fluctuations.</p>
+      <p class="cp">The Natya Shastra's acoustic framework begins with a cosmological claim that modern physics has spent a century approaching: that the universe is fundamentally vibrational. The distinction between Ahata Nada (struck sound) and Anahata Nada (unstruck sound) maps precisely onto modern physics' distinction between classical acoustic waves and quantum field fluctuations.</p>
       <p class="cp">The Shruti system — the Natya Shastra's micro-tonal framework of 22 divisions within the octave — predates by two millennia the discoveries of psychoacoustics. Contemporary bio-acoustic research has confirmed that specific Shruti intervals produce demonstrably different HRV responses — some parasympathetic-activating, others sympathetic-arousing.</p>
       <div class="pq"><p>"The Natya Shastra's 22 Shrutis are an ancient micro-tonal pharmacopoeia — each frequency ratio a precisely calibrated physiological intervention."</p></div>
-      <p class="cp">The concept of Nada Brahman — sound as the creative substrate of existence — is encoded throughout the Natya Shastra not as metaphysics but as experimental protocol. When the performer sings specific Beeja Aksharas while performing corresponding Karanas, the simultaneous somatic vibration creates a coupled oscillation system.</p>
+      <p class="cp">The concept of Nada Brahman — sound as the creative substrate of existence — is encoded throughout the Natya Shastra not as metaphysics but as experimental protocol.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🎵</span><div><div class="rt">22 Shrutis &amp; HRV Response</div><div class="rd">Specific Shruti intervals produce distinct autonomic nervous system signatures</div></div></div>
         <div class="ri"><span class="ric">🌊</span><div><div class="rt">Bio-Acoustic Medicine</div><div class="rd">Raga pharmacopoeia: each Raga mapped to specific glandular and neural targets</div></div></div>
@@ -700,8 +780,8 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
   </div></div>
 </section>
 
-<!-- ═══ TOPIC IV — SCIENCE OF SOUND PAGE 2 ═══ -->
-<div class="strip" id="so2" style="background:linear-gradient(100deg,rgba(46,18,4,.86),rgba(68,28,10,.82))">
+<!-- TOPIC IV SOUND 2 -->
+<div class="strip" id="so2" style="background:rgba(44,18,4,.46)">
   <div class="si"><div><div class="sm">Topic IV · Page 2 of 2</div><div class="st">Raga Pharmacopoeia &amp; Human Existence</div></div><div class="pg">08</div></div>
 </div>
 <section class="sec sec-dk">
@@ -709,8 +789,8 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div>
       <span class="lbl">Science of Sound — II</span>
       <h2 class="ttl">Sound, Human Existence &amp; <em>the Cosmic Resonance</em></h2>
-      <p class="cp">The Natya Shastra's classification of Ragas by time of day, season, and therapeutic application constitutes the world's first chronobiological acoustic medicine system. The prescription of specific Ragas for specific times is not aesthetic preference — it is a sophisticated understanding of the human body's circadian biochemistry mapped onto the resonant properties of specific scale patterns.</p>
-      <p class="cp">Cymatics research — the study of visible patterns formed by sound frequencies in physical media — demonstrates that the geometric forms produced by specific Beeja Akshara frequencies are identical to the Yantra diagrams used in classical Indian ritual. These are empirical observations encoded in a system that understood sound as the generative principle of form.</p>
+      <p class="cp">The Natya Shastra's classification of Ragas by time of day, season, and therapeutic application constitutes the world's first chronobiological acoustic medicine system. The prescription of specific Ragas for specific times reflects a sophisticated understanding of the human body's circadian biochemistry mapped onto the resonant properties of specific scale patterns.</p>
+      <p class="cp">Cymatics research demonstrates that the geometric forms produced by specific Beeja Akshara frequencies are identical to the Yantra diagrams used in classical Indian ritual — empirical observations encoded in a system that understood sound as the generative principle of form.</p>
       <div class="pq"><p>"The Raga system is a chronobiological acoustic medicine — prescribing specific frequency environments for specific physiological states across the circadian cycle."</p></div>
       <p class="cp">Contemporary research in music-based neurological therapy has validated the Natya Shastra's prescriptions with remarkable specificity. Raga Bhairav reduces blood pressure in hypertensive patients. Raga Yaman correlates with measurable anxiety reduction. Raga Todi demonstrates anti-spasmodic properties measurable in smooth muscle tissue.</p>
       <div class="rl">
@@ -721,17 +801,17 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     </div>
     <div class="scc">
       <div class="sc"><span class="sn">Shloka 1 · Chapter XXIX, Verse 47</span><div class="ss">प्रातःकाले तु षड्जश्च मध्याह्ने गान्धारस्तथा।<br/>सायंकाले निषादश्च रात्रौ पञ्चमसंज्ञितः॥</div><div class="str">"At dawn, Shadja; at midday, Gandhara; at evening, Nishada; and at night, Panchama — thus the Swaras are prescribed for the divisions of day."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 2 · Chapter XXX, Verse 11</span><div class="ss">मधुरः करुणश्चैव अद्भुतो रौद्र एव च।<br/>वीरश्च बीभत्सश्च भयानकस्तथैव च।<br/>हास्यो रागेण जायन्ते जातिभिः सहितास्तु ते॥</div><div class="str">"Sweet, compassionate, wondrous, fierce, heroic, loathsome, terrifying, and joyful — these Rasas arise through specific Ragas combined with their own Jatis."</div><span class="src">Natya Shastra, Chapter XXX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 3 · Chapter XXVIII, Verse 30</span><div class="ss">ब्रह्माण्डमण्डले येषां स्वराणां संनिवेशनम्।<br/>तेऽपि देहे निवसन्ति ब्रह्माण्डसदृशे नृणाम्॥</div><div class="str">"The Swaras whose arrangement is in the sphere of Brahman — those same Swaras dwell within the body of humans, which resembles the cosmic sphere."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 4 · Chapter XXIX, Verse 1</span><div class="ss">सामगायन् सदा देवाः स्वर्गे वसन्ति सन्ततम्।<br/>नाभ्यादुदीर्य हृद्येति मुखं च क्रमशः स्वरः॥</div><div class="str">"By singing the Sama, the gods ever dwell in heaven. The Swara rises from the navel, proceeds to the heart, and thence to the throat and mouth."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 5 · Chapter XXXII, Verse 6</span><div class="ss">तालेन सर्वमाबद्धं त्रिजगत्सचराचरम्।<br/>तालहीनं जगत्सर्वं विच्छिन्नतन्तुसंनिभम्॥</div><div class="str">"All three worlds, moving and unmoving, are bound by Tala. The entire world without Tala resembles a thread that is severed."</div><span class="src">Natya Shastra, Chapter XXXII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 2 · Chapter XXVIII, Verse 30</span><div class="ss">ब्रह्माण्डमण्डले येषां स्वराणां संनिवेशनम्।<br/>तेऽपि देहे निवसन्ति ब्रह्माण्डसदृशे नृणाम्॥</div><div class="str">"The Swaras arranged in the cosmic sphere also dwell within the body of humans, which resembles that same cosmic sphere."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 3 · Chapter XXIX, Verse 1</span><div class="ss">सामगायन् सदा देवाः स्वर्गे वसन्ति सन्ततम्।<br/>नाभ्यादुदीर्य हृद्येति मुखं च क्रमशः स्वरः॥</div><div class="str">"By singing the Sama, the gods ever dwell in heaven. The Swara rises from the navel, proceeds to the heart, and thence to the throat and mouth."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 4 · Chapter XXXII, Verse 6</span><div class="ss">तालेन सर्वमाबद्धं त्रिजगत्सचराचरम्।<br/>तालहीनं जगत्सर्वं विच्छिन्नतन्तुसंनिभम्॥</div><div class="str">"All three worlds, moving and unmoving, are bound by Tala. The entire world without Tala resembles a thread that is severed."</div><span class="src">Natya Shastra, Chapter XXXII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 5 · Chapter XXIX, Verse 15</span><div class="ss">सूर्यस्य रश्मयः सप्त सप्त स्वरास्तथैव च।<br/>सप्त ग्रहाश्च विख्याताः सप्त लोकास्तथैव च॥</div><div class="str">"Seven rays of the sun, seven Swaras, seven planets, seven worlds — all are seven, interconnected by the same principle."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
     </div>
   </div></div>
 </section>
 <div class="orn"><span>✦ ✦ ✦</span></div>
 
-<!-- ═══ TOPIC V — SAPTASWARAS PAGE 1 ═══ -->
-<div class="strip" id="sw1" style="background:linear-gradient(100deg,rgba(10,26,52,.86),rgba(18,42,78,.82))">
+<!-- TOPIC V SWARAS 1 -->
+<div class="strip" id="sw1" style="background:rgba(10,24,50,.46)">
   <div class="si"><div><div class="sm">Topic V · Page 1 of 2</div><div class="st">Saptaswaras — The Seven Cosmic Frequencies</div></div><div class="pg">09</div></div>
 </div>
 <section class="sec sec-lt">
@@ -740,18 +820,18 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
       <span class="lbl">Saptaswaras — I</span>
       <h2 class="ttl">The Seven Swaras &amp; <em>Human Physiological</em> Systems</h2>
       <p class="cp">The seven Saptaswaras — Sa (Shadja), Re (Rishabha), Ga (Gandhara), Ma (Madhyama), Pa (Panchama), Dha (Dhaivata), Ni (Nishada) — are not merely musical notes. Each Swara is the resonant frequency of a specific organ system, endocrine gland, and vertebral region of the human body. This functional mapping is now being confirmed by modern bio-acoustic research.</p>
-      <p class="cp">Sa (Shadja) — whose origin the Natya Shastra locates in the navel and whose animal resonance is the peacock's call — corresponds to the fundamental frequency of the muladhara energy centre, the adrenal axis, and the sacral plexus. Modern research confirms that low-frequency acoustic stimulation in the 100–130 Hz range produces measurable parasympathetic activation and adrenocortical modulation.</p>
+      <p class="cp">Sa (Shadja) — whose origin the Natya Shastra locates in the navel, with the peacock as its animal resonance — corresponds to the fundamental frequency of the muladhara energy centre, the adrenal axis, and the sacral plexus. Low-frequency acoustic stimulation in the 100–130 Hz range produces measurable parasympathetic activation and adrenocortical modulation.</p>
       <div class="pq"><p>"Each Swara is a frequency prescription for a specific organ system — the Saptaswaras are a complete acoustic map of human physiology."</p></div>
-      <p class="cp">The Gandhara (Ga) swara, located by the Natya Shastra in the throat, maps onto the thyroid-parathyroid axis. The Panchama (Pa), associated with the cuckoo, corresponds to cardiac rhythm regulation — its frequency (~384 Hz) aligns with known cardiac entrainment frequencies in heart-brain coherence research.</p>
+      <p class="cp">The Gandhara (Ga) swara maps onto the thyroid-parathyroid axis. The Panchama (Pa), associated with the cuckoo, corresponds to cardiac rhythm regulation — its frequency (~384 Hz) aligns with known cardiac entrainment frequencies in heart-brain coherence research.</p>
       <div class="rl">
         <div class="ri"><span class="ric">🎶</span><div><div class="rt">Sa — Adrenal Axis Modulation</div><div class="rd">100–130 Hz acoustic stimulation: measurable adrenocortical and autonomic effects</div></div></div>
-        <div class="ri"><span class="ric">🦋</span><div><div class="rt">Ga — Thyroid Resonance</div><div class="rd">Sustained Gandhara vocalization: measurable thyroid hormone fluctuations</div></div></div>
+        <div class="ri"><span class="ric">🦋</span><div><div class="rt">Ga — Thyroid Resonance</div><div class="rd">Sustained Gandhara vocalisation: measurable thyroid hormone fluctuations</div></div></div>
         <div class="ri"><span class="ric">💓</span><div><div class="rt">Pa — Cardiac Entrainment</div><div class="rd">Panchama frequency (~384 Hz) aligns with cardiac coherence entrainment frequencies</div></div></div>
       </div>
     </div>
     <div class="scc">
       <div class="sc"><span class="sn">Shloka 1 · Chapter XXVIII, Verse 21</span><div class="ss">षड्जं वदति मयूरो हि गावो रम्भन्ति चर्षभम्।<br/>अजा वदति गान्धारं क्रौञ्चो वदति मध्यमम्॥</div><div class="str">"The peacock cries Shadja; the cattle low Rishabha; the goat speaks Gandhara; the Krauncha bird cries Madhyama."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 2 · Chapter XXVIII, Verse 22</span><div class="ss">कोकिलः पञ्चमं ब्रूते षड्जं चातकपक्षिणः।<br/>अश्वाः षड्जं च गजाश्च धैवतं निषादमेव च॥</div><div class="str">"The cuckoo sings Panchama; the Chataka bird sings Shadja; horses sing Shadja; elephants sing Dhaivata and Nishada."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 2 · Chapter XXVIII, Verse 22</span><div class="ss">कोकिलः पञ्चमं ब्रूते षड्जं चातकपक्षिणः।<br/>अश्वाः षड्जं च गजाश्च धैवतं निषादमेव च॥</div><div class="str">"The cuckoo sings Panchama; the Chataka bird Shadja; horses Shadja; elephants sing Dhaivata and Nishada."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 3 · Chapter XXIX, Verse 8</span><div class="ss">नाभौ षड्जः स्थितो नित्यं हृदि रिषभ एव च।<br/>गले गान्धार आसीनो मूर्धनि मध्यम उच्यते॥</div><div class="str">"Shadja ever resides in the navel; Rishabha in the heart; Gandhara is seated in the throat; Madhyama is said to be at the crown of the head."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 4 · Chapter XXIX, Verse 9</span><div class="ss">पञ्चमो नासिकायां तु ललाटे धैवतस्तथा।<br/>निषादस्तु सर्वाङ्गे सप्त स्वरा व्यवस्थिताः॥</div><div class="str">"Panchama resides in the nose; Dhaivata in the forehead; and Nishada pervades all the limbs — thus the seven Swaras are established."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
       <div class="sc"><span class="sn">Shloka 5 · Chapter XXVIII, Verse 25</span><div class="ss">सप्त स्वरास्त्रयो ग्रामाः समर्था इति कीर्त्यते।<br/>षड्जमध्यमगान्धारः प्रधाना ग्रामसंज्ञकाः॥</div><div class="str">"Seven Swaras, three Gramas — these are declared complete. Shadja, Madhyama, and Gandhara are the principal ones known as the Gramas."</div><span class="src">Natya Shastra, Chapter XXVIII · Bharata Muni</span></div>
@@ -759,8 +839,8 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
   </div></div>
 </section>
 
-<!-- ═══ TOPIC V — SAPTASWARAS PAGE 2 ═══ -->
-<div class="strip" id="sw2" style="background:linear-gradient(100deg,rgba(8,22,38,.86),rgba(12,30,56,.82))">
+<!-- TOPIC V SWARAS 2 -->
+<div class="strip" id="sw2" style="background:rgba(8,20,36,.46)">
   <div class="si"><div><div class="sm">Topic V · Page 2 of 2</div><div class="st">Saptaswaras, Consciousness &amp; Cosmic Harmony</div></div><div class="pg">10</div></div>
 </div>
 <section class="sec sec-dk">
@@ -768,7 +848,7 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     <div>
       <span class="lbl">Saptaswaras — II</span>
       <h2 class="ttl">Saptaswaras, Planetary Science &amp; <em>Human Consciousness</em></h2>
-      <p class="cp">The seven Saptaswaras' correspondence to seven planets (Saptagrahas), seven colours (VIBGYOR), seven energy centres (Saptachakras), and seven fundamental human emotional archetypes is a unified theory of vibrational reality. The Natya Shastra encodes this explicitly: the Swaras are the acoustic form of the same mathematical constants that govern celestial mechanics, chromatic perception, and consciousness states.</p>
+      <p class="cp">The seven Saptaswaras' correspondence to seven planets (Saptagrahas), seven colours (VIBGYOR), seven energy centres (Saptachakras), and seven fundamental human emotional archetypes is a unified theory of vibrational reality. The Swaras are the acoustic form of the same mathematical constants that govern celestial mechanics, chromatic perception, and consciousness states.</p>
       <p class="cp">Modern harmonic physics has established that the frequency ratios between planetary orbital periods correspond, with extraordinary precision, to the frequency ratios of the Saptaswaras in Pythagorean tuning. The Earth-Venus orbital ratio produces approximately 8:5 — identical to the major sixth interval, corresponding to the Sa-Dha relationship.</p>
       <div class="pq"><p>"The Saptaswaras are not seven sounds — they are seven expressions of the universe's fundamental vibrational constants, made audible and embodied."</p></div>
       <p class="cp">In consciousness science, the seven Saptaswaras map onto seven distinct brainwave regions: Shadja (Delta) — deep sleep; Rishabha (Theta) — meditative insight; Gandhara (Alpha) — relaxed awareness; Madhyama (Low Beta) — focused attention; Panchama (High Beta) — active cognition; Dhaivata (Gamma) — peak experience; Nishada (Hyper-Gamma) — transcendent states.</p>
@@ -779,20 +859,20 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
       </div>
     </div>
     <div class="scc">
-      <div class="sc"><span class="sn">Shloka 1 · Chapter XXIX, Verse 15</span><div class="ss">सूर्यस्य रश्मयः सप्त सप्त स्वरास्तथैव च।<br/>सप्त ग्रहाश्च विख्याताः सप्त लोकास्तथैव च॥</div><div class="str">"Seven rays of the sun, seven Swaras, seven celebrated planets, seven worlds — all are seven, and all are interconnected by the same principle."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 2 · Chapter XXIX, Verse 17</span><div class="ss">षड्जो ब्रह्मा तु विज्ञेयो ऋषभो विष्णुरेव च।<br/>गान्धारश्चैव रुद्रश्च मध्यमो विश्वकर्मणे॥</div><div class="str">"Shadja is Brahma; Rishabha is Vishnu; Gandhara is Rudra; Madhyama belongs to Vishvakarman — the cosmic architect."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 3 · Chapter XXIX, Verse 18</span><div class="ss">पञ्चमस्तु नरश्चैव धैवतः शचिपतिः।<br/>निषादो गणपश्चैव सप्त स्वरा महाशयाः॥</div><div class="str">"Panchama is the human being; Dhaivata is Indra; and Nishada is Ganesha — these seven noble Swaras embody the complete hierarchy of existence."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 4 · Chapter XXX, Verse 1</span><div class="ss">ये स्वरा मन्त्ररूपेण जप्यन्ते चेतसा सदा।<br/>ते एव सर्वसिद्धिं च दिशन्ति साधकस्य वै॥</div><div class="str">"Those Swaras which are always contemplated in the form of Mantra — those very Swaras bestow all accomplishments upon the practitioner."</div><span class="src">Natya Shastra, Chapter XXX · Bharata Muni</span></div>
-      <div class="sc"><span class="sn">Shloka 5 · Chapter XXXVI, Verse 1</span><div class="ss">सर्वशास्त्राणि चैतानि नाट्ये सन्ति समाहिताः।<br/>तस्मान्नाट्यं प्रयोक्तव्यं धर्मार्थकाममोक्षदम्॥</div><div class="str">"All these sciences are contained within Natya. Therefore Natya should be performed, for it bestows Dharma, Artha, Kama, and Moksha — the four aims of human existence."</div><span class="src">Natya Shastra, Chapter XXXVI · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 1 · Chapter XXIX, Verse 17</span><div class="ss">षड्जो ब्रह्मा तु विज्ञेयो ऋषभो विष्णुरेव च।<br/>गान्धारश्चैव रुद्रश्च मध्यमो विश्वकर्मणे॥</div><div class="str">"Shadja is Brahma; Rishabha is Vishnu; Gandhara is Rudra; Madhyama belongs to Vishvakarman — the cosmic architect."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 2 · Chapter XXIX, Verse 18</span><div class="ss">पञ्चमस्तु नरश्चैव धैवतः शचिपतिः।<br/>निषादो गणपश्चैव सप्त स्वरा महाशयाः॥</div><div class="str">"Panchama is the human being; Dhaivata is Indra; and Nishada is Ganesha — these seven noble Swaras embody the complete hierarchy of existence."</div><span class="src">Natya Shastra, Chapter XXIX · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 3 · Chapter XXX, Verse 1</span><div class="ss">ये स्वरा मन्त्ररूपेण जप्यन्ते चेतसा सदा।<br/>ते एव सर्वसिद्धिं च दिशन्ति साधकस्य वै॥</div><div class="str">"Those Swaras which are always contemplated in the form of Mantra bestow all accomplishments upon the practitioner."</div><span class="src">Natya Shastra, Chapter XXX · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 4 · Chapter XXXVI, Verse 1</span><div class="ss">सर्वशास्त्राणि चैतानि नाट्ये सन्ति समाहिताः।<br/>तस्मान्नाट्यं प्रयोक्तव्यं धर्मार्थकाममोक्षदम्॥</div><div class="str">"All these sciences are contained within Natya. Therefore Natya should be performed — it bestows Dharma, Artha, Kama, and Moksha."</div><span class="src">Natya Shastra, Chapter XXXVI · Bharata Muni</span></div>
+      <div class="sc"><span class="sn">Shloka 5 · Chapter I, Verse 107</span><div class="ss">सर्वेषामेव शास्त्राणां नाट्यशास्त्रं परायणम्।<br/>तस्माद्विज्ञातसर्वस्वो नाट्यज्ञः पूज्यते नरः॥</div><div class="str">"The Natya Shastra is the supreme refuge of all Shastras. Therefore, the person who knows Natya in its entirety is worthy of honour."</div><span class="src">Natya Shastra, Chapter I · Bharata Muni</span></div>
     </div>
   </div></div>
 </section>
 
-<!-- INQUIRY FORM -->
+<!-- INQUIRY -->
 <section id="inquiry">
   <div class="iqi">
     <div class="iqh">
-      <span class="lbl" style="color:var(--gold-light)">Begin the Dialogue</span>
+      <span class="lbl">Begin the Dialogue</span>
       <h2>Scholarly Inquiry &amp; Introduction</h2>
       <p>Connect with the research behind this work. Whether you are a researcher, practitioner, institution, or sincere seeker — this inquiry form initiates your introduction to the deeper archive.</p>
     </div>
@@ -821,7 +901,7 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
     </div>
     <div class="fsb">
       <button class="bts" onclick="doSub()">Submit Inquiry</button>
-      <p class="fn" id="fnote">All inquiries are personally reviewed. Responses within 7–14 days for scholarly matters.</p>
+      <p class="fn-note" id="fnote">All inquiries are personally reviewed. Responses within 7–14 days for scholarly matters.</p>
     </div>
   </div>
 </section>
@@ -829,80 +909,106 @@ body{font-family:'Cormorant Garamond',serif;background:#0a1428;color:#2a2a2a;ove
 <footer id="foot">
   <div class="fb"><span class="fn1">Aesthetics of Society</span><span class="fu">culturalmusings.com</span></div>
   <nav class="fnv">
-    <a href="#author">About</a>
-    <a href="#ai1">AI</a>
-    <a href="#n1">Neuroscience</a>
-    <a href="#m1">Medical</a>
-    <a href="#so1">Sound</a>
-    <a href="#sw1">Saptaswaras</a>
+    <a href="#author">About</a><a href="#ai1">AI</a><a href="#n1">Neuroscience</a>
+    <a href="#m1">Medical</a><a href="#so1">Sound</a><a href="#sw1">Saptaswaras</a>
     <a href="#inquiry">Inquiry</a>
   </nav>
   <div class="fc">© 2026 Naredla Rama Chandra · Aesthetics of Society</div>
 </footer>
 
 <script>
-/* ─── BACKGROUND IMAGE ROTATION ─── */
-const REPO = 'https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/';
-const IMG_FILES = ['0.jpg','1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
-const layers = document.querySelectorAll('.bg-layer');
-let activeBg = 0;
+/* ═══════════════════════════════════════════════════════════
+   ROBUST BACKGROUND IMAGE ROTATION
+   Strategy:
+   1. Set layer[0] URL immediately (no waiting for onload)
+   2. Preload all 6 images into a JS cache
+   3. When an image finishes loading, push its URL into a ready queue
+   4. Rotate every 10 s; only switch to images that are actually loaded
+   5. 1.8 s crossfade — clearly visible change every 10 s
+   6. Body has a rich gradient fallback so page always looks good
+═══════════════════════════════════════════════════════════ */
+const REPO  = 'https://raw.githubusercontent.com/ramachandra1975/natyashastra-/main/';
+const FILES = ['0.jpg','1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
+const layers = Array.from(document.querySelectorAll('.bg-layer'));
+const ready  = [];   // indices of fully-loaded images
+let cur = 0;
 
-IMG_FILES.forEach((file, i) => {
-  if (!layers[i]) return;
+// Immediately attempt to display image 0 (before onload fires)
+layers[0].style.backgroundImage = `url('${REPO}${FILES[0]}')`;
+layers[0].classList.add('active');
+
+FILES.forEach((file, i) => {
   const img = new Image();
-  img.onload = () => { layers[i].style.backgroundImage = `url('${REPO}${file}')`; };
-  img.src = REPO + file;
+  img.onload = () => {
+    layers[i].style.backgroundImage = `url('${REPO}${file}')`;
+    if (!ready.includes(i)) ready.push(i);
+    // If this is the first one loaded and layer 0 was blank, activate it
+    if (ready.length === 1) {
+      layers[cur].classList.remove('active');
+      cur = i;
+      layers[cur].classList.add('active');
+    }
+  };
+  img.onerror = () => {}; // silently skip failed images
+  img.src = `${REPO}${file}`;
 });
 
-// Start first layer immediately visible
-layers[0].style.backgroundImage = `url('${REPO}${IMG_FILES[0]}')`;
-
+// Rotate every 10 s — clearly noticeable (was 40 s before!)
 setInterval(() => {
-  layers[activeBg].classList.remove('active');
-  activeBg = (activeBg + 1) % layers.length;
-  layers[activeBg].classList.add('active');
-}, 40000);
+  if (ready.length < 2) return; // wait until we have at least 2 loaded
+  const readyCopy = ready.filter(i => i !== cur);
+  const nextIdx   = readyCopy[Math.floor(Math.random() * readyCopy.length)];
+  layers[cur].classList.remove('active');
+  cur = nextIdx;
+  layers[cur].classList.add('active');
+}, 10000);
 
-/* ─── WATERMARK FALLBACK ─── */
+/* ─── Watermark fallback ─── */
 (function(){
-  const wmImg = document.querySelector('#wm-logo img');
-  if (!wmImg) return;
-  wmImg.addEventListener('error', () => {
-    document.getElementById('wm-logo').style.display='none';
-    document.getElementById('wm-om').style.display='block';
-  });
+  const w = document.querySelector('#wm-logo img');
+  if (!w) return;
+  w.onerror = () => {
+    document.getElementById('wm-logo').style.display = 'none';
+    document.getElementById('wm-om').style.display   = 'block';
+  };
 })();
 
-/* ─── NAV SCROLL SHADOW ─── */
+/* ─── Nav scroll shadow ─── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
-  nav.classList.toggle('sc', window.scrollY > 40);
+  nav.classList.toggle('sc', scrollY > 30);
 }, { passive:true });
 
-/* ─── SMOOTH SCROLL ─── */
+/* ─── Smooth scroll (offset for fixed nav) ─── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) {
       e.preventDefault();
-      window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - 68, behavior:'smooth' });
+      window.scrollTo({
+        top: t.getBoundingClientRect().top + scrollY - 66,
+        behavior:'smooth'
+      });
     }
   });
 });
 
-/* ─── INQUIRY SUBMIT ─── */
+/* ─── Inquiry form submit ─── */
 function doSub() {
   const name  = document.getElementById('fn').value.trim();
   const email = document.getElementById('fe').value.trim();
   const msg   = document.getElementById('fq').value.trim();
-  if (!name || !email || !msg) { alert('Please complete Name, Email, and Inquiry fields.'); return; }
-  const btn = document.querySelector('.bts');
-  btn.textContent = 'Inquiry Submitted ✓';
+  if (!name || !email || !msg) {
+    alert('Please complete Name, Email, and Inquiry fields.');
+    return;
+  }
+  const btn  = document.querySelector('.bts');
+  btn.textContent    = 'Inquiry Submitted ✓';
   btn.style.background = '#2a5a2a';
-  btn.disabled = true;
+  btn.disabled       = true;
   const note = document.getElementById('fnote');
-  note.textContent = 'Thank you, ' + name + '. Your inquiry has been received and will be reviewed within 7–14 days.';
-  note.style.color = 'rgba(180,220,180,.75)';
+  note.textContent   = `Thank you, ${name}. Your inquiry has been received and will be reviewed within 7–14 days.`;
+  note.style.color   = 'rgba(150,200,145,.68)';
 }
 </script>
 </body>
